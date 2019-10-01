@@ -11,9 +11,20 @@ namespace infiBanChecker
         private protected static string steamID;
         private protected static string infiToken;
         public static string APIErrorMessage;
+        private static string getID
+        {
+            get
+            {
+                Console.Clear();
+                Console.WriteLine("Enter The SteamID You Want To Check Ban Status For\n");
+                Console.WriteLine("SteamID64: ");
+                return Console.ReadLine();
+            }
+        }
+
         static void Main()
         {
-            steamID = "76561198050103064";
+            steamID = getID; 
             infiToken = "someTokenHere"; 
             string uri = $"{endPoint}?license_token={infiToken}&uid={steamID}";
   
