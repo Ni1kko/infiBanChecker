@@ -43,7 +43,12 @@ namespace infiBanChecker
             } 
 
             return jfile.GetValue(token).ToString();
-        }
+        }  
+        private const int MF_BYCOMMAND = 0x00000000;
+        private const int SC_MINIMIZE = 0xF020;
+        private const int SC_MAXIMIZE = 0xF030;
+        private const int SC_SIZE = 0xF000;
+
         #endregion
 
         #region Import c++ Helper Libs  
@@ -52,9 +57,26 @@ namespace infiBanChecker
         [DllImport("kernel32.dll", ExactSpelling = true)] private static extern IntPtr GetConsoleWindow();
         #endregion
 
+        #region Helpers   
+        private static void setupConsole(string title, int h, int w, ConsoleColor col_bg = ConsoleColor.Black, ConsoleColor col_txt = ConsoleColor.White)
+        {
+            Console.Title = title;
+            Console.BackgroundColor = col_bg;
+            Console.ForegroundColor = col_txt;
+            Console.WindowHeight = h;
+            Console.BufferHeight = h;
+            Console.WindowWidth = w;
+            Console.BufferWidth = w;
+
+            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
+            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
+            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
+        }
+        #endregion
+
         #region EntryPoint
         static void Main()
-        {
+        { 
             if (!File.Exists(config))
             {
                 Console.WriteLine($"Unable to find file:( {config} )");
@@ -67,7 +89,14 @@ namespace infiBanChecker
             steamID = getID; 
             infiToken = (string)getJsonValue("infiStarLic"); 
             string uri = $"{endPoint}?license_token={infiToken}&uid={steamID}";
-  
+
+            setupConsole(
+                $"InfiBanCheck | {infiToken}",
+                w: 55, h: 20,
+                col_bg: ConsoleColor.White,
+                col_txt: ConsoleColor.Black
+            );
+
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(endPoint); 
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); 
@@ -90,6 +119,7 @@ namespace infiBanChecker
                 APIErrorMessage = APIErrorMessage.Length < 1 ? APIresponse.ReasonPhrase : data.message;
                 Console.WriteLine("{0} ({1})\r\n", (int)APIresponse.StatusCode, APIErrorMessage); 
             }
+
 
             Console.ReadKey();
         }
