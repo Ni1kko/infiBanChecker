@@ -43,6 +43,10 @@ namespace infiBanChecker
 
                 } 
             }
+            else
+            {
+                Console.WriteLine("{0} ({1})\r\n", (int)APIresponse.StatusCode, APIresponse.ReasonPhrase);
+            }
 
             Console.ReadKey();
         }
