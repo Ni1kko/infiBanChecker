@@ -37,7 +37,7 @@ namespace infiBanChecker
                         Console.Clear();
                         Console.WriteLine($"Exiting in {timeout} Seconds...");
                         var twoSeconds = (2 * 60);
-                        Thread.Sleep(twoSeconds);
+                        await Task.Delay(twoSeconds);
                     } 
                 } 
                 Environment.Exit(0);
