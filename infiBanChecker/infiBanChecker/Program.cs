@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers; 
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq; 
@@ -11,6 +12,7 @@ namespace infiBanChecker
 { 
     sealed class Program
     {
+        #region Reference Data Types 
         public static Assembly _assembly = Assembly.GetExecutingAssembly();
         private const string endPoint = "https://api.infistar.de/arma/getGlobalBan";
         private static string steamID, infiToken, APIErrorMessage;
@@ -42,7 +44,15 @@ namespace infiBanChecker
 
             return jfile.GetValue(token).ToString();
         }
+        #endregion
 
+        #region Import c++ Helper Libs  
+        [DllImport("user32.dll")] private static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
+        [DllImport("user32.dll")] private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+        [DllImport("kernel32.dll", ExactSpelling = true)] private static extern IntPtr GetConsoleWindow();
+        #endregion
+
+        #region EntryPoint
         static void Main()
         {
             if (!File.Exists(config))
@@ -83,5 +93,6 @@ namespace infiBanChecker
 
             Console.ReadKey();
         }
+        #endregion
     }
 }
