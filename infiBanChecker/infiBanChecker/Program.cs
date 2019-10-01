@@ -11,6 +11,9 @@ namespace infiBanChecker
         #region EntryPoint
         private static async Task Main()
         {
+            // new instance of the api class
+            Helpers.api = new API();
+
             // setup console window
             Helpers.setupConsole(
                 $"{Helpers._assembly.GetName().Name}",

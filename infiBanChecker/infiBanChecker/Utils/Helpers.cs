@@ -16,7 +16,7 @@ namespace infiBanChecker.Utils
     {
         #region Reference Data Types  
         internal static Assembly _assembly = Assembly.GetExecutingAssembly();
-        internal static API api = new API(); 
+        internal static API api; 
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
         private static string APIErrorMessage;
         private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error;
