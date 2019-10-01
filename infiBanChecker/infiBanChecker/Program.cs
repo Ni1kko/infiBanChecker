@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks; 
 using infiBanChecker.Utils;
 
@@ -22,7 +21,7 @@ namespace infiBanChecker
             //Check Config Is Present
             if (!File.Exists(Helpers._config))
             {
-                int timeout = 10;//in seconds
+                int timeout = 10;//in seconds 
                 
                 Console.WriteLine($"Unable to find file:( {Helpers._config} )");
                 Console.Beep(3700, 500);//Im soo fucking sorry :crying-with-laughter: 
@@ -35,9 +34,8 @@ namespace infiBanChecker
                     else
                     { 
                         Console.Clear();
-                        Console.WriteLine($"Exiting in {timeout} Seconds...");
-                        var twoSeconds = (2 * 60);
-                        await Task.Delay(twoSeconds);
+                        Console.WriteLine($"Exiting in {timeout} Seconds..."); 
+                        await Task.Delay(Helpers.timeSeconds(1));
                     } 
                 } 
                 Environment.Exit(0);

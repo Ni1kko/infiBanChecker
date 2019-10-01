@@ -181,6 +181,13 @@ namespace infiBanChecker.Utils
             await Task.Delay(400);
             #endregion
         }
-        #endregion 
+        #endregion
+
+        #region Seconds To MilSeconds 
+        internal static int timeSeconds(int seconds)
+        {
+            return (seconds * 1000);
+        }
+        #endregion
     }
 }
