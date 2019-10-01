@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
+using System.Reflection;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq; 
@@ -10,9 +11,11 @@ using Newtonsoft.Json.Linq;
 namespace infiBanChecker
 { 
     class Program
-    { 
+    {
+        public static Assembly _assembly = Assembly.GetExecutingAssembly();
         private protected const string endPoint = "https://api.infistar.de/arma/getGlobalBan";
-        private protected static string config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+        private protected static string config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
+
         private protected static string steamID;
         private protected static string infiToken;
         public static string APIErrorMessage;
