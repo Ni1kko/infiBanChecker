@@ -19,7 +19,7 @@ namespace infiBanChecker.Utils
         internal static API api; 
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
         private static string APIErrorMessage;
-        private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error;
+        private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error, isTokenOk = false;
         private static HttpResponseMessage APIresponse;
         #endregion
 
@@ -191,8 +191,12 @@ namespace infiBanChecker.Utils
         }
         #endregion
 
-        internal static async Task<bool> checkTokenFromJson(string tokenFromJson)
+        #region Check InfiStar Token 
+        internal static async Task<bool> checkInfiStarToken(string tokenFromJson)
         {
+            if (isTokenOk) return true;
+            isTokenOk = !isTokenOk;
+             
             if (tokenFromJson == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
             {
                 Console.WriteLine($"You must edit `infiStarLic` and add you license token \nconfig file can be found here\r\n\r\n{_config}\r\n\r\n");
@@ -226,6 +230,7 @@ namespace infiBanChecker.Utils
             }
             return true;
         }
+        #endregion
 
         #region exitConsole
         internal static async Task exitConsole(int timeout = 10)

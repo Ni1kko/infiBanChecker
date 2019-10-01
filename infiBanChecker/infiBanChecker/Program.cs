@@ -32,7 +32,7 @@ namespace infiBanChecker
             }
              
             // loop if infistar license token is not default
-            while (await Helpers.checkTokenFromJson((string)Helpers.getJsonValue("infiStarLic")))
+            while (await Helpers.checkInfiStarToken((string)Helpers.getJsonValue("infiStarLic")))
             {
                 await Helpers.CheckSteam64(api: Helpers.api);
             } 
