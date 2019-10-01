@@ -15,7 +15,7 @@ namespace infiBanChecker
         private protected const string endPoint = "https://api.infistar.de/arma/getGlobalBan"; 
         private protected static string steamID;
         private protected static string infiToken;
-        
+        public static string APIErrorMessage;
         static void Main(string[] args)
         {
             steamID = "76561198050103064";
@@ -45,7 +45,9 @@ namespace infiBanChecker
             }
             else
             {
-                Console.WriteLine("{0} ({1})\r\n", (int)APIresponse.StatusCode, APIresponse.ReasonPhrase);
+                APIErrorMessage = data.message;
+                APIErrorMessage = APIErrorMessage.Length < 1 ? APIresponse.ReasonPhrase : data.message;
+                Console.WriteLine("{0} ({1})\r\n", (int)APIresponse.StatusCode, APIErrorMessage); 
             }
 
             Console.ReadKey();
