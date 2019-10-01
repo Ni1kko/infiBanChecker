@@ -86,17 +86,18 @@ namespace infiBanChecker
                 Environment.Exit(0);
             }
 
-            steamID = getID; 
-            infiToken = (string)getJsonValue("infiStarLic"); 
-            string uri = $"{endPoint}?license_token={infiToken}&uid={steamID}";
+            infiToken = (string)getJsonValue("infiStarLic");
 
             setupConsole(
-                $"InfiBanCheck | {infiToken}",
+                $"{_assembly.GetName().Name} | {infiToken}",
                 w: 55, h: 20,
                 col_bg: ConsoleColor.White,
                 col_txt: ConsoleColor.Black
             );
 
+            steamID = getID;
+            string uri = $"{endPoint}?license_token={infiToken}&uid={steamID}";
+          
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(endPoint); 
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); 
