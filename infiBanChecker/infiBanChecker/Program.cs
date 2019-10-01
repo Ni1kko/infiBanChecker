@@ -13,7 +13,8 @@ namespace infiBanChecker
     {
         public static Assembly _assembly = Assembly.GetExecutingAssembly();
         private const string endPoint = "https://api.infistar.de/arma/getGlobalBan";
-        private static string config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json"),steamID,infiToken,APIErrorMessage;
+        private static string steamID, infiToken, APIErrorMessage;
+        private static readonly string config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
         private static string getID
         {
             get
