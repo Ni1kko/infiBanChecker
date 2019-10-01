@@ -13,94 +13,52 @@ namespace infiBanChecker
     sealed class Program
     {
         #region Reference Data Types 
-        public static Assembly _assembly = Assembly.GetExecutingAssembly();
-        private const string endPoint = "https://api.infistar.de/arma/getGlobalBan";
         private static string steamID, infiToken, APIErrorMessage;
-        private static readonly string config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
-        private static string getID
-        {
-            get
-            {
-                Console.Clear();
-                Console.WriteLine("Enter The SteamID You Want To Check Ban Status For\n");
-                Console.WriteLine("SteamID64: ");
-                return Console.ReadLine();
-            }
-        }
-        private static object getJsonValue(string token)
-        { 
-            var jRead = File.OpenText(config);
-            var jreader = new JsonTextReader(jRead);
-            var jfile = (JObject)JToken.ReadFrom(jreader);
-             
-            if (!jfile.ContainsKey(token))
-            {
-                Console.WriteLine($"Unable to find Json Token:( '{token}' )");
-                Console.Beep(1300, 200); 
-                Console.WriteLine("Press `ANY Key` To Exit");
-                Console.ReadKey(); 
-                Environment.Exit(0);
-            } 
-
-            return jfile.GetValue(token).ToString();
-        }  
-        private const int MF_BYCOMMAND = 0x00000000;
-        private const int SC_MINIMIZE = 0xF020;
-        private const int SC_MAXIMIZE = 0xF030;
-        private const int SC_SIZE = 0xF000;
-
-        #endregion
-
-        #region Import c++ Helper Libs  
-        [DllImport("user32.dll")] private static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
-        [DllImport("user32.dll")] private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-        [DllImport("kernel32.dll", ExactSpelling = true)] private static extern IntPtr GetConsoleWindow();
-        #endregion
-
-        #region Helpers   
-        private static void setupConsole(string title, int h, int w, ConsoleColor col_bg = ConsoleColor.Black, ConsoleColor col_txt = ConsoleColor.White)
-        {
-            Console.Title = title;
-            Console.BackgroundColor = col_bg;
-            Console.ForegroundColor = col_txt;
-            Console.WindowHeight = h;
-            Console.BufferHeight = h;
-            Console.WindowWidth = w;
-            Console.BufferWidth = w;
-
-            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
-            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
-            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
-        }
         #endregion
 
         #region EntryPoint
         static void Main()
         { 
-            if (!File.Exists(config))
+            if (!File.Exists(Helpers._config))
             {
-                Console.WriteLine($"Unable to find file:( {config} )");
+                int timeout = 10;//in seconds
+                
+                Console.WriteLine($"Unable to find file:( {Helpers._config} )");
                 Console.Beep(3700, 500);//Im soo fucking sorry :crying-with-laughter: 
-                Console.WriteLine("Exiting...");
-                Thread.Sleep(400);
+                Console.WriteLine("Press `ANY Key` To Exit");
+                Console.ReadKey();
+                while (timeout > 0)
+                { 
+                    timeout -= 1;
+                    if (timeout < 1) break;
+                    else
+                    { 
+                        Console.Clear();
+                        Console.WriteLine($"Exiting in {timeout} Seconds...");
+                        var twoSeconds = (2 * 60);
+                        Thread.Sleep(twoSeconds);
+                    } 
+                } 
                 Environment.Exit(0);
             }
 
-            infiToken = (string)getJsonValue("infiStarLic");
+            infiToken = (string)Helpers.getJsonValue("infiStarLic");
 
-            setupConsole(
-                $"{_assembly.GetName().Name} | {infiToken}",
+            Helpers.setupConsole(
+                $"{Helpers._assembly.GetName().Name} | {infiToken}",
                 w: 55, h: 20,
                 col_bg: ConsoleColor.White,
                 col_txt: ConsoleColor.Black
             );
 
-            steamID = getID;
-            string uri = $"{endPoint}?license_token={infiToken}&uid={steamID}";
+            steamID = Helpers.getID;
+            
           
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(endPoint); 
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); 
+            client.BaseAddress = new Uri(Helpers.endPoint); 
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string uri = $"{Helpers.endPoint}?license_token={infiToken}&uid={steamID}";
             HttpResponseMessage APIresponse = client.GetAsync(uri).Result; 
             dynamic data = JObject.Parse(APIresponse.Content.ReadAsStringAsync().Result);
      
