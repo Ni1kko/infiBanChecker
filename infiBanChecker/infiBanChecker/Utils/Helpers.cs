@@ -14,8 +14,9 @@ namespace infiBanChecker.Utils
 {
     internal sealed class Helpers
     {
-        #region Reference Data Types 
-        internal static Assembly _assembly = Assembly.GetExecutingAssembly(); 
+        #region Reference Data Types  
+        internal static Assembly _assembly = Assembly.GetExecutingAssembly();
+        internal static API api = new API(); 
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
         private static string APIErrorMessage;
         private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error;
@@ -188,6 +189,62 @@ namespace infiBanChecker.Utils
         {
             return (seconds * 1000);
         }
+        #endregion
+
+        internal static async Task<bool> checkTokenFromJson(string tokenFromJson)
+        {
+            if (tokenFromJson == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            {
+                Console.WriteLine($"You must edit `infiStarLic` and add you license token \nconfig file can be found here\r\n\r\n{_config}\r\n\r\n");
+                await exitConsole();
+            }
+            else
+            {
+                // infistar license to short
+                if (tokenFromJson.Length< 30)
+                {
+                    Console.WriteLine("infiStarLic license token is too short\r\nplease check and try again\r\n\r\n");
+                    await exitConsole();
+                }
+                else
+                {
+                    // infistar license invalid format
+                    if (!(bool) Helpers.stringContainsInteger(tokenFromJson)[0])
+                    {
+                        Console.WriteLine("infiStarLic license token format invalid\r\nplease check and try again\r\n\r\n");
+                        await exitConsole();
+                    }
+                    else
+                    {
+                        //Set infistar token
+                        api.infiToken = tokenFromJson;
+
+                        //Append infistar token to the console title
+                        Console.Title += $" | {api.infiToken}";
+                    } 
+                } 
+            }
+            return true;
+        }
+
+        #region exitConsole
+        internal static async Task exitConsole(int timeout = 10)
+        {
+            Console.WriteLine("Press `ANY Key` To Exit");
+            Console.ReadKey();
+            while (timeout > 0)
+            {
+                timeout -= 1;
+                if (timeout < 1) break;
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine($"Exiting in {timeout} Seconds...");
+                    await Task.Delay(Helpers.timeSeconds(1));
+                }
+            }
+            Environment.Exit(0);
+        } 
         #endregion
     }
 }

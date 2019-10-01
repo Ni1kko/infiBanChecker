@@ -5,55 +5,34 @@ using infiBanChecker.Utils;
 
 namespace infiBanChecker
 { 
+   
     sealed class Program
     { 
         #region EntryPoint
         private static async Task Main()
         {
-            //Setup Console Window
+            // setup console window
             Helpers.setupConsole(
                 $"{Helpers._assembly.GetName().Name}",
                 w: 65, h: 15,
                 col_bg: ConsoleColor.White,
                 col_txt: ConsoleColor.Black
             );
-
-            //Check Config Is Present
+             
+            // check config is present
             if (!File.Exists(Helpers._config))
             {
-                int timeout = 10;//in seconds 
-                
-                Console.WriteLine($"Unable to find file:( {Helpers._config} )");
+                //Todo: Create default blank config if its not present
+                Console.WriteLine($"Unable to find file\r\n\r\n{Helpers._config}\r\n\r\n");
                 Console.Beep(3700, 500);//Im soo fucking sorry :crying-with-laughter: 
-                Console.WriteLine("Press `ANY Key` To Exit");
-                Console.ReadKey();
-                while (timeout > 0)
-                { 
-                    timeout -= 1;
-                    if (timeout < 1) break;
-                    else
-                    { 
-                        Console.Clear();
-                        Console.WriteLine($"Exiting in {timeout} Seconds..."); 
-                        await Task.Delay(Helpers.timeSeconds(1));
-                    } 
-                } 
-                Environment.Exit(0);
-            }
-         
-            //Setup api info
-            API api = new API();
-            api.infiToken = (string)Helpers.getJsonValue("infiStarLic"); 
-      
-            //Append Infistar Token To Title
-            Console.Title += $" | {api.infiToken}";
-
-            //Loop
-            while (true)
-            {
-                await Helpers.CheckSteam64(api: api);
+                await Helpers.exitConsole(30);
             }
              
+            //Loop + check infistar license token is not default
+            while (await Helpers.checkTokenFromJson((string)Helpers.getJsonValue("infiStarLic")))
+            {
+                await Helpers.CheckSteam64(api: Helpers.api);
+            } 
         }
         #endregion
     }
