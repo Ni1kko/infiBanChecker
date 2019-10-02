@@ -1,12 +1,20 @@
-﻿using System.Threading.Tasks; 
+﻿using System;
+using System.Threading.Tasks; 
 
 namespace infiBanChecker
 {
     internal sealed class Program
-    {
+    { 
+        #region Version information
+        //      Major Version
+        //      Minor Version
+        //      Build Number 
+        internal const string version = "1.1.0";
+        #endregion
+
         #region EntryPoint
         private static async Task Main()
-        {
+        {  
             #region Setup the console window parameters
             Utils.Helpers.setupConsole(
                 $"{Utils.Helpers._assembly.GetName().Name}",

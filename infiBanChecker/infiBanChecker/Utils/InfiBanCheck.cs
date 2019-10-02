@@ -1,5 +1,4 @@
-﻿ 
-namespace infiBanChecker.Utils
+﻿namespace infiBanChecker.Utils
 {
     internal sealed class InfiBanCheck
     {

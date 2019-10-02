@@ -1,36 +1,16 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System.Reflection; 
 using System.Runtime.InteropServices;
+using infiBanChecker;
 
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
 [assembly: AssemblyTitle("infiBanChecker")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("check infistar globalban state")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("FalloxGroup")]
 [assembly: AssemblyProduct("infiBanChecker")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Nikko Renolds")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-// Setting ComVisible to false makes the types in this assembly not visible
-// to COM components.  If you need to access a type in this assembly from
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("234c81de-7c29-4947-8087-ffe4eff467fb")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyCulture("")] 
+[assembly: ComVisible(true)] 
+[assembly: Guid("F0E2ED09-E530-4F90-AADF-42447A6FC3A3")] 
+[assembly: AssemblyVersion(Program.version)]
+[assembly: AssemblyFileVersion(Program.version)]
