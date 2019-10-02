@@ -31,6 +31,15 @@ namespace infiBanChecker
                     await Helpers.CheckSteam64(api: Helpers.api);
                 }
             }
+            /*To be removed start*/
+            else
+            {
+                Console.WriteLine($"Unable to find file\r\n\r\n{Helpers._config}\r\n\r\n");
+                Console.Beep(3700, 500);//Im soo fucking sorry :crying-with-laughter: 
+            }
+            /*remove end*/
+
+
         }
         #endregion
     }
