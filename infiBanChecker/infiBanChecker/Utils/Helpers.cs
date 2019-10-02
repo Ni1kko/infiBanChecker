@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.IO; 
+using System.Net.Http;  
+using System.Runtime.InteropServices; 
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Threading.Tasks; 
 using Newtonsoft.Json.Linq; 
 
 namespace infiBanChecker.Utils
@@ -17,7 +11,7 @@ namespace infiBanChecker.Utils
     internal sealed class Helpers
     {
         #region Reference Data Types  
-        internal static Assembly _assembly = Assembly.GetExecutingAssembly();
+        internal static System.Reflection.Assembly _assembly = System.Reflection.Assembly.GetExecutingAssembly();
         internal static API api; 
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
         private static string APIErrorMessage;
@@ -43,7 +37,7 @@ namespace infiBanChecker.Utils
         {
             var jRead = File.OpenText(_config);
             JObject jfile;
-            using (var jreader = new JsonTextReader(jRead))
+            using (var jreader = new Newtonsoft.Json.JsonTextReader(jRead))
             {
                 jfile = JToken.ReadFrom(jreader) as JObject;
                 if (jfile == null || !jfile.ContainsKey(token))
@@ -51,7 +45,7 @@ namespace infiBanChecker.Utils
                     Console.WriteLine($"Unable to find Json Token:( '{token}' )");
                     Console.WriteLine("Press `ANY Key` To Exit");
                     Console.ReadKey();
-                    Thread.SpinWait(10);
+                    Task.Delay(timeSeconds(2));
                     Environment.Exit(0);
                 }
                 return jfile.GetValue(token).ToString();
@@ -105,9 +99,9 @@ namespace infiBanChecker.Utils
 
             #region Add accept header for JSON 
             client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json")
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
             );
-            #endregion 
+            #endregion  
 
             return client;
         }
@@ -241,8 +235,8 @@ namespace infiBanChecker.Utils
         /// writes token & value too Json
         /// </summary>
         private static async Task<bool> configWriter(string[] arr)
-        { 
-            StringBuilder _jsonOut = new StringBuilder(arr.Length);
+        {
+            var _jsonOut = new System.Text.StringBuilder(arr.Length);
             
             foreach (var a in arr)
             {
@@ -276,7 +270,7 @@ namespace infiBanChecker.Utils
             if (!File.Exists(_config))
             {
                 configWriter(jsonData).Wait(); 
-                using (var jreader = new JsonTextReader(File.OpenText(_config)))
+                using (var jreader = new Newtonsoft.Json.JsonTextReader(File.OpenText(_config)))
                 {
                     JObject jfile = JToken.ReadFrom(jreader) as JObject;
                     foreach (var data in jsonData)

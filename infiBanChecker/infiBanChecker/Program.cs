@@ -1,46 +1,26 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks; 
-using infiBanChecker.Utils;
+﻿using System.Threading.Tasks; 
 
 namespace infiBanChecker
-{ 
-   
-    sealed class Program
-    { 
+{
+    internal sealed class Program
+    {
         #region EntryPoint
         private static async Task Main()
         {
-            // new instance of the api class
-            Helpers.api = new API();
-
-            // setup console window
-            Helpers.setupConsole(
-                $"{Helpers._assembly.GetName().Name}",
+            #region Setup the console window parameters
+            Utils.Helpers.setupConsole(
+                $"{Utils.Helpers._assembly.GetName().Name}",
                 w: 65, h: 15,
-                col_bg: ConsoleColor.White,
-                col_txt: ConsoleColor.Black
+                col_bg: System.ConsoleColor.White,
+                col_txt: System.ConsoleColor.Black
             );
-             
-            // check config is present
-            if (await Helpers.configExists())
-            {
-                // loop if infistar license token is not default
-                while (await Helpers.checkInfiStarToken((string)Helpers.jsonContainsKey("infiStarLic")))
-                {
-                    await Helpers.CheckSteam64(api: Helpers.api);
-                }
-            }
-            /*To be removed start*/
-            else
-            {
-                Console.WriteLine($"Unable to find file\r\n\r\n{Helpers._config}\r\n\r\n");
-                Console.Beep(3700, 500);//Im soo fucking sorry :crying-with-laughter: 
-            }
-            /*remove end*/
+            #endregion
 
-
+            #region Start BanChecker
+            var infiBanCheck = new Utils.InfiBanCheck();
+            await infiBanCheck.Run();
+            #endregion 
         }
-        #endregion
-    }
+        #endregion 
+    } 
 }
