@@ -1,9 +1,7 @@
 # infiBanChecker 2019
- 
- if you have any problems open a issue and i will fix it :p
-<<<<<<< Updated upstream
-=======
 
+if you have any problems open a issue and i will fix it :p
+ 
 ### How to use
 you will need a token(infiStar License Key)
 simply add you token to the *infiBanChecker.json* file then launch *infiBanChecker.exe*
@@ -24,4 +22,4 @@ Edit your infiBanChecker.json to look like this
   "infiStarLic": "your infistar token here"
 }
 ```
->>>>>>> Stashed changes
+ 
