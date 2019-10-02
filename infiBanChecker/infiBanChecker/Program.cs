@@ -23,19 +23,23 @@ namespace infiBanChecker
             );
              
             // check config is present
-            if (!File.Exists(Helpers._config))
+            if (await Helpers.configExists())
             {
-                //Todo: Create default blank config if its not present
+                // loop if infistar license token is not default
+                while (await Helpers.checkInfiStarToken((string)Helpers.jsonContainsKey("infiStarLic")))
+                {
+                    await Helpers.CheckSteam64(api: Helpers.api);
+                }
+            }
+            /*To be removed start*/
+            else
+            {
                 Console.WriteLine($"Unable to find file\r\n\r\n{Helpers._config}\r\n\r\n");
                 Console.Beep(3700, 500);//Im soo fucking sorry :crying-with-laughter: 
-                await Helpers.exitConsole(30);
             }
-             
-            // loop if infistar license token is not default
-            while (await Helpers.checkInfiStarToken((string)Helpers.getJsonValue("infiStarLic")))
-            {
-                await Helpers.CheckSteam64(api: Helpers.api);
-            } 
+            /*remove end*/
+
+
         }
         #endregion
     }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,7 +39,7 @@ namespace infiBanChecker.Utils
         #endregion
 
         #region Read Token Value From Json
-        internal static object getJsonValue(string token)
+        internal static object jsonContainsKey(string token)
         {
             var jRead = File.OpenText(_config);
             JObject jfile;
@@ -196,7 +198,7 @@ namespace infiBanChecker.Utils
         {
             if (isTokenOk) return true;
             isTokenOk = !isTokenOk;
-             
+           
             if (tokenFromJson == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
             {
                 Console.WriteLine($"You must edit `infiStarLic` and add you license token \nconfig file can be found here\r\n\r\n{_config}\r\n\r\n");
@@ -213,7 +215,7 @@ namespace infiBanChecker.Utils
                 else
                 {
                     // infistar license invalid format
-                    if (!(bool) Helpers.stringContainsInteger(tokenFromJson)[0])
+                    if (!(bool) stringContainsInteger(tokenFromJson)[0])
                     {
                         Console.WriteLine("infiStarLic license token format invalid\r\nplease check and try again\r\n\r\n");
                         await exitConsole();
@@ -230,6 +232,82 @@ namespace infiBanChecker.Utils
             }
             return true;
         }
+        #endregion
+
+        #region config
+        /// temp
+        /// Todo: Use jsonWriter 
+        /// <summary>
+        /// writes token & value too Json
+        /// </summary>
+        private static async Task<bool> configWriter(string[] arr)
+        { 
+            StringBuilder _jsonOut = new StringBuilder(arr.Length);
+            
+            foreach (var a in arr)
+            {
+                var aSplit = a.Split(':');
+                _jsonOut.Append($"\t\"{aSplit[0]}\":\"{aSplit[1]}\",\r\n"); 
+            }
+
+            if (_jsonOut.Length > 1)
+            {
+                File.WriteAllText(
+                    contents: "{\r\n\r\n" + 
+                                _jsonOut +
+                              "\r\n}", 
+                    path: _config 
+               );  
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// create default config
+        /// </summary>
+        private static async Task<bool> createConfig()
+        {  
+            bool mismatch = false; 
+            string[] jsonData = {
+                "infiStarLic:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            };
+
+            if (!File.Exists(_config))
+            {
+                configWriter(jsonData).Wait(); 
+                using (var jreader = new JsonTextReader(File.OpenText(_config)))
+                {
+                    JObject jfile = JToken.ReadFrom(jreader) as JObject;
+                    foreach (var data in jsonData)
+                    {
+                        if (mismatch) break;
+                        if (jfile == null || !jfile.ContainsKey((string)jsonContainsKey(data.Split(':')[0])))
+                        {
+                            mismatch = !mismatch;
+                        }
+                    }
+                }
+            } 
+            return mismatch;
+        }
+
+        /// <summary>
+        /// checks config exists if not try create default config
+        /// </summary> 
+        internal static async Task<bool> configExists()
+        { 
+            if (!File.Exists(_config))
+            {
+                if (!await createConfig())
+                {
+                    Console.WriteLine("unable to create config\r\nplease make sure app is in a folder where it has permissions and try again\r\n\r\n");
+                    await exitConsole();
+                }
+            }
+            return File.Exists(_config);
+        }
+
         #endregion
 
         #region exitConsole
