@@ -80,8 +80,8 @@ namespace infiBanChecker.Utils
 
         internal static void setupConsole(string title, int h, int w, ConsoleColor col_bg = ConsoleColor.Black, ConsoleColor col_txt = ConsoleColor.White)
         {
-            //Slightly increase console width if localization in not english
-            w = (Program.localization == "en-EN") ? w : (w + 15);
+            //Slightly increase console width if localization in not english or danish
+            w = (Program.localization == "en-EN" || Program.localization == "da-DK") ? w : (w + 15);
 
             Console.Title = title;
             Console.BackgroundColor = col_bg;
