@@ -1,18 +1,14 @@
 ﻿using System; 
 using System.Threading.Tasks;
-using static System.Threading.Thread; 
-
 namespace infiBanChecker
 {
     internal sealed class Program
-    {
-        internal static string localization = CurrentThread.CurrentUICulture.Name;
-
+    { 
         #region Version information
         //      Major Version
         //      Minor Version
         //      Build Number 
-        internal const string version = "2.1.0";
+        internal const string version = "2.1.1";
         #endregion
 
         

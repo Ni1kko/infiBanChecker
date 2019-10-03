@@ -8,10 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace infiBanChecker.Properties {
-    using System;
-    
-    
+namespace infiBanChecker.Localization { 
+    using static System.Threading.Thread;
+  
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -22,14 +21,14 @@ namespace infiBanChecker.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Localization {
+    internal class Language {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Localization() {
+        internal Language() {
         }
         
         /// <summary>
@@ -39,7 +38,7 @@ namespace infiBanChecker.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("infiBanChecker.Properties.Localization", typeof(Localization).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("infiBanChecker.Localization.Language", typeof(Language).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -59,7 +58,7 @@ namespace infiBanChecker.Properties {
                 resourceCulture = value;
             }
         }
-        
+         
         /// <summary>
         ///   Looks up a localized string similar to Press `ANY Key` To Exit.
         /// </summary>
@@ -210,6 +209,56 @@ namespace infiBanChecker.Properties {
         internal static string ValidatingWithAPIMessage {
             get {
                 return ResourceManager.GetString("ValidatingWithAPIMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        /// Culture Codes
+        /// </summary>
+        internal enum CultureCode
+        {
+            English,
+            Danish,
+            German,
+            French,
+            Russian,
+            Polish
+        }
+
+        /// <summary>
+        /// Defines current culture code
+        /// </summary>
+        internal static string CurrentCultureCode
+        {
+            get
+            {
+                return CurrentThread.CurrentUICulture.Name;
+            }
+        }
+
+        /// <summary>
+        /// Returns Culture code enum as string
+        /// </summary>
+        /// <param name="cc">Culture code enum</param>
+        /// <returns></returns>
+        internal static string GetCultureCode(CultureCode cc)
+        {
+            switch (cc)
+            {
+                case CultureCode.English:
+                    return "en-EN";
+                case CultureCode.Danish:
+                    return "da-DK";
+                case CultureCode.German:
+                    return "da-DK"; 
+                case CultureCode.French:
+                    return "br-FR";
+                case CultureCode.Russian:
+                    return "ru-RU";
+                case CultureCode.Polish:
+                    return "pl-PL";
+                default:
+                    return "";
             }
         }
     }
