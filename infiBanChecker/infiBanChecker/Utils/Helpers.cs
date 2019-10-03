@@ -33,10 +33,10 @@ namespace infiBanChecker.Utils
         private static string readSid64FromConsole
         {
             get
-            {
+            { 
                 Console.Clear();
-                Console.WriteLine("Enter The SteamID You Want To Check Ban Status For\n");
-                Console.WriteLine("SteamID64: ");
+                Console.WriteLine(Properties.Localization.EnterSteam64Message + "\n");
+                Console.WriteLine(Properties.Localization.Steam64 + ": ");
                 return Console.ReadLine();
             }
         }

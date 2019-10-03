@@ -1,10 +1,12 @@
 ﻿using System; 
+using System.Threading;
 using System.Threading.Tasks; 
 
 namespace infiBanChecker
 {
     internal sealed class Program
-    { 
+    {
+       
         #region Version information
         //      Major Version
         //      Minor Version
@@ -15,6 +17,8 @@ namespace infiBanChecker
         #region EntryPoint
         private static async Task Main()
         {
+            //Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo("de-DE");
+             
             #region Subscibe AssemblyResolve to resolve embedded assemblies
             AppDomain.CurrentDomain.AssemblyResolve += Utils.Helpers.CurrentDomain_AssemblyResolve; 
             #endregion
