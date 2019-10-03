@@ -10,13 +10,10 @@ namespace infiBanChecker
         //      Build Number 
         internal const string version = "2.1.1";
         #endregion
-
-        
+         
         #region EntryPoint
         private static async Task Main()
-        { 
-            //CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo("de-DE"); 
-        
+        {  
             #region Subscibe AssemblyResolve to resolve embedded assemblies
             AppDomain.CurrentDomain.AssemblyResolve += Utils.Helpers.CurrentDomain_AssemblyResolve; 
             #endregion

@@ -81,7 +81,6 @@ namespace infiBanChecker.Utils
           
         internal static void setupConsole(string title, int h, int w, ConsoleColor col_bg = ConsoleColor.Black, ConsoleColor col_txt = ConsoleColor.White)
         {
-
             #region Slightly increase console width depending on the users language 
             if(CurrentCultureCode == GetCultureCode(CultureCode.English))
                 w += 0;
@@ -104,7 +103,6 @@ namespace infiBanChecker.Utils
                 w += 30;
             #endregion
              
-            
             Console.Title = title;
             Console.BackgroundColor = col_bg;
             Console.ForegroundColor = col_txt;
