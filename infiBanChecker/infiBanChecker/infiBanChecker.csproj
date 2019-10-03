@@ -47,10 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\Localization.Designer.cs">
+    <Compile Include="Localization\Language.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Localization.resx</DependentUpon>
+      <DependentUpon>Language.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils\API.cs" />
     <Compile Include="Utils\Endpoint.cs" />
@@ -65,11 +65,13 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EmbeddedAssemblies\Newtonsoft.Json.dll" />
-    <EmbeddedResource Include="Properties\Localization.de.resx" />
-    <EmbeddedResource Include="Properties\Localization.resx">
+    <EmbeddedResource Include="Localization\Language.de.resx" />
+    <EmbeddedResource Include="Localization\Language.da.resx" />
+    <EmbeddedResource Include="Localization\Language.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+      <LastGenOutput>Language.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

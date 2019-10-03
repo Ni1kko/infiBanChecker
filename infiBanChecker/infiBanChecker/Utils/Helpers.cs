@@ -3,20 +3,21 @@ using System.IO;
 using System.Net.Http; 
 using System.Runtime.InteropServices; 
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;  
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using static infiBanChecker.Localization.Language;
 
 namespace infiBanChecker.Utils
 {
     internal sealed class Helpers
-    {
+    { 
         #region Reference Data Types  
         internal static System.Reflection.Assembly _assembly = typeof(Helpers).Assembly;  
         internal static API api; 
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
         private static string APIErrorMessage;
         private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error, isTokenOk = false;
-        private static HttpResponseMessage APIresponse;
+        private static HttpResponseMessage APIresponse; 
         #endregion
 
         #region Resolve Embedded Assemblies
@@ -35,8 +36,8 @@ namespace infiBanChecker.Utils
             get
             { 
                 Console.Clear();
-                Console.WriteLine("{0}\n", Properties.Localization.EnterSteam64Message);
-                Console.WriteLine("{0}: ", Properties.Localization.Steam64);
+                Console.WriteLine("{0}\n", Localization.Language.EnterSteam64Message);
+                Console.WriteLine("{0}: ", Localization.Language.Steam64);
                 return Console.ReadLine();
             }
         }
@@ -52,8 +53,8 @@ namespace infiBanChecker.Utils
                 jfile = JToken.ReadFrom(jreader) as JObject;
                 if (jfile == null || !jfile.ContainsKey(token))
                 { 
-                    Console.WriteLine("{0}:( '{1}' )", Properties.Localization.JsonTokenMissingMessage, token);
-                    Console.WriteLine(Properties.Localization.AnyKeyToExitMessage);
+                    Console.WriteLine("{0}:( '{1}' )", Localization.Language.JsonTokenMissingMessage, token);
+                    Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
                     Console.ReadKey();
                     Task.Delay(timeSeconds(2));
                     Environment.Exit(0);
@@ -62,7 +63,7 @@ namespace infiBanChecker.Utils
             } 
         }
         #endregion
-
+         
         #region setupConsole 
 
         #region Parameters
@@ -77,12 +78,33 @@ namespace infiBanChecker.Utils
         [DllImport("user32.dll")] private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
         [DllImport("kernel32.dll", ExactSpelling = true)] private static extern IntPtr GetConsoleWindow();
         #endregion
-
+          
         internal static void setupConsole(string title, int h, int w, ConsoleColor col_bg = ConsoleColor.Black, ConsoleColor col_txt = ConsoleColor.White)
         {
-            //Slightly increase console width if localization in not english
-            w = (Program.localization == "en-EN") ? w : (w + 15);
 
+            #region Slightly increase console width depending on the users language 
+            if(CurrentCultureCode == GetCultureCode(CultureCode.English))
+                w += 0;
+            else 
+            if(CurrentCultureCode == GetCultureCode(CultureCode.Danish))
+                w += 0;
+            else 
+            if(CurrentCultureCode == GetCultureCode(CultureCode.German))
+                w += 20;
+            else
+            if (CurrentCultureCode == GetCultureCode(CultureCode.French))
+                w += 10;
+            else
+            if (CurrentCultureCode == GetCultureCode(CultureCode.Russian))
+                w += 25;
+            else
+            if (CurrentCultureCode == GetCultureCode(CultureCode.Polish))
+                w += 10;
+            else
+                w += 30;
+            #endregion
+             
+            
             Console.Title = title;
             Console.BackgroundColor = col_bg;
             Console.ForegroundColor = col_txt;
@@ -138,7 +160,7 @@ namespace infiBanChecker.Utils
                 if (api.steamID.Length == 17 && !isSteam64Error)
                 {
                     Console.Clear(); 
-                    Console.WriteLine("{0}: `{1}` {2}\n", Properties.Localization.ValidatingSteam64Message, api.steamID, Properties.Localization.ValidatingWithAPIMessage);
+                    Console.WriteLine("{0}: `{1}` {2}\n", Localization.Language.ValidatingSteam64Message, api.steamID, Localization.Language.ValidatingWithAPIMessage);
                     break;
                 }
             }
@@ -165,12 +187,12 @@ namespace infiBanChecker.Utils
                 {
                     isGlobalBanned = (data.message.state == "1");
                     Console.Clear(); 
-                    Console.WriteLine("{0}: {1}\r\n", Properties.Localization.ResultFoundMessage, data.message.uid);
+                    Console.WriteLine("{0}: {1}\r\n", Localization.Language.ResultFoundMessage, data.message.uid);
 
                     if (isGlobalBanned) 
-                        Console.WriteLine("{0} | {1}\r\n", Properties.Localization.BanGlobal, data.message.bandate);
+                        Console.WriteLine("{0} | {1}\r\n", Localization.Language.BanGlobal, data.message.bandate);
                     else 
-                        Console.WriteLine("{0}\r\n", Properties.Localization.BanClean);
+                        Console.WriteLine("{0}\r\n", Localization.Language.BanClean);
                 }
                 #endregion
             }
@@ -183,7 +205,7 @@ namespace infiBanChecker.Utils
             #endregion
 
             #region Wait for user input
-            Console.WriteLine(Properties.Localization.AnyKeyToSearchAnotherMessage);
+            Console.WriteLine(Localization.Language.AnyKeyToSearchAnotherMessage);
             Console.ReadKey();
             #endregion
 
@@ -210,7 +232,7 @@ namespace infiBanChecker.Utils
            
             if (tokenFromJson == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
             { 
-                Console.WriteLine("{0} \n{1}\r\n\r\n{2}\r\n\r\n", Properties.Localization.EditDefaultConfigMessage, Properties.Localization.ConfigCanBeFoundMessage, _config);
+                Console.WriteLine("{0} \n{1}\r\n\r\n{2}\r\n\r\n", Localization.Language.EditDefaultConfigMessage, Localization.Language.ConfigCanBeFoundMessage, _config);
                 await exitConsole();
             }
             else
@@ -218,7 +240,7 @@ namespace infiBanChecker.Utils
                 // infistar license to short
                 if (tokenFromJson.Length< 30)
                 { 
-                       Console.WriteLine("{0}\r\n{1}\r\n\r\n", Properties.Localization.InfiLicenseTooShortMessage, Properties.Localization.CheckAndTryAgainMessage);
+                       Console.WriteLine("{0}\r\n{1}\r\n\r\n", Localization.Language.InfiLicenseTooShortMessage, Localization.Language.CheckAndTryAgainMessage);
                     await exitConsole();
                 }
                 else
@@ -227,7 +249,7 @@ namespace infiBanChecker.Utils
                     if (!(bool) stringContainsInteger(tokenFromJson)[0])
                     {
 
-                        Console.WriteLine("{0}\r\n{1}\r\n\r\n", Properties.Localization.InfiLicenseInvalidMessage, Properties.Localization.CheckAndTryAgainMessage);
+                        Console.WriteLine("{0}\r\n{1}\r\n\r\n", Localization.Language.InfiLicenseInvalidMessage, Localization.Language.CheckAndTryAgainMessage);
                         await exitConsole();
                     }
                     else
@@ -323,7 +345,7 @@ namespace infiBanChecker.Utils
         #region exitConsole
         internal static async Task exitConsole(int timeout = 10)
         {
-            Console.WriteLine(Properties.Localization.AnyKeyToExitMessage);
+            Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
             Console.ReadKey();
             while (timeout > 0)
             {
@@ -332,7 +354,7 @@ namespace infiBanChecker.Utils
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine("{0} {1} {2}...", Properties.Localization.ExitingInMessage, timeout, Properties.Localization.Seconds);
+                    Console.WriteLine("{0} {1} {2}...", Localization.Language.ExitingInMessage, timeout, Localization.Language.Seconds);
                     await Task.Delay(Helpers.timeSeconds(1));
                 }
             }
