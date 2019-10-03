@@ -61,6 +61,69 @@ namespace infiBanChecker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Press `ANY Key` To Exit.
+        /// </summary>
+        internal static string AnyKeyToExitMessage {
+            get {
+                return ResourceManager.GetString("AnyKeyToExitMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press `ANY Key` To Lookup another ID.
+        /// </summary>
+        internal static string AnyKeyToSearchAnotherMessage {
+            get {
+                return ResourceManager.GetString("AnyKeyToSearchAnotherMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean.
+        /// </summary>
+        internal static string BanClean {
+            get {
+                return ResourceManager.GetString("BanClean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GlobalBan.
+        /// </summary>
+        internal static string BanGlobal {
+            get {
+                return ResourceManager.GetString("BanGlobal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to please check and try again.
+        /// </summary>
+        internal static string CheckAndTryAgainMessage {
+            get {
+                return ResourceManager.GetString("CheckAndTryAgainMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to config file can be found here.
+        /// </summary>
+        internal static string ConfigCanBeFoundMessage {
+            get {
+                return ResourceManager.GetString("ConfigCanBeFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must edit `infiStarLic` and add you license token.
+        /// </summary>
+        internal static string EditDefaultConfigMessage {
+            get {
+                return ResourceManager.GetString("EditDefaultConfigMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter The SteamID You Want To Check GlobalBan Status For.
         /// </summary>
         internal static string EnterSteam64Message {
@@ -70,11 +133,83 @@ namespace infiBanChecker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exiting in.
+        /// </summary>
+        internal static string ExitingInMessage {
+            get {
+                return ResourceManager.GetString("ExitingInMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to infiStarLic license token format invalid.
+        /// </summary>
+        internal static string InfiLicenseInvalidMessage {
+            get {
+                return ResourceManager.GetString("InfiLicenseInvalidMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to infiStarLic license token is too short.
+        /// </summary>
+        internal static string InfiLicenseTooShortMessage {
+            get {
+                return ResourceManager.GetString("InfiLicenseTooShortMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find Json Token.
+        /// </summary>
+        internal static string JsonTokenMissingMessage {
+            get {
+                return ResourceManager.GetString("JsonTokenMissingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found Result For SteamID.
+        /// </summary>
+        internal static string ResultFoundMessage {
+            get {
+                return ResourceManager.GetString("ResultFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seconds.
+        /// </summary>
+        internal static string Seconds {
+            get {
+                return ResourceManager.GetString("Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SteamID64.
         /// </summary>
         internal static string Steam64 {
             get {
                 return ResourceManager.GetString("Steam64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validating SteamID.
+        /// </summary>
+        internal static string ValidatingSteam64Message {
+            get {
+                return ResourceManager.GetString("ValidatingSteam64Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With Infistar&apos;s API.
+        /// </summary>
+        internal static string ValidatingWithAPIMessage {
+            get {
+                return ResourceManager.GetString("ValidatingWithAPIMessage", resourceCulture);
             }
         }
     }

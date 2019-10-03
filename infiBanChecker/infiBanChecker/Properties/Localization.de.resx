@@ -117,10 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AnyKeyToExitMessage" xml:space="preserve">
+    <value>Drücken Sie zum Verlassen `auf eine beliebige Taste`</value>
+  </data>
+  <data name="AnyKeyToSearchAnotherMessage" xml:space="preserve">
+    <value>Drücken Sie eine beliebige Taste, um nach SteamID zu suchen</value>
+  </data>
+  <data name="BanClean" xml:space="preserve">
+    <value>Reinigen</value>
+  </data>
+  <data name="BanGlobal" xml:space="preserve">
+    <value>Global Verboten</value>
+  </data>
+  <data name="CheckAndTryAgainMessage" xml:space="preserve">
+    <value>Bitte überprüfen Sie und versuchen Sie es erneut</value>
+  </data>
+  <data name="ConfigCanBeFoundMessage" xml:space="preserve">
+    <value>Die Konfigurationsdatei finden Sie hier</value>
+  </data>
+  <data name="EditDefaultConfigMessage" xml:space="preserve">
+    <value>Sie müssen `infiStarLic` bearbeiten und Ihr Lizenz-Token hinzufügen</value>
+  </data>
   <data name="EnterSteam64Message" xml:space="preserve">
     <value>Geben Sie die SteamID ein, für die Sie den GlobalBan-Status überprüfen möchten</value>
   </data>
+  <data name="ExitingInMessage" xml:space="preserve">
+    <value>Ausfahrt in</value>
+  </data>
+  <data name="InfiLicenseInvalidMessage" xml:space="preserve">
+    <value>Das infiStarLic-Lizenz-Token-Format ist ungültig</value>
+  </data>
+  <data name="InfiLicenseTooShortMessage" xml:space="preserve">
+    <value>Das infiStarLic-Lizenz-Token ist zu kurz</value>
+  </data>
+  <data name="JsonTokenMissingMessage" xml:space="preserve">
+    <value>Json Token konnte nicht gefunden werden</value>
+  </data>
+  <data name="ResultFoundMessage" xml:space="preserve">
+    <value>Gefundenes Ergebnis für SteamID</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>Sekunden</value>
+  </data>
   <data name="Steam64" xml:space="preserve">
     <value>SteamID64</value>
+  </data>
+  <data name="ValidatingSteam64Message" xml:space="preserve">
+    <value>Überprüfung der SteamID</value>
+  </data>
+  <data name="ValidatingWithAPIMessage" xml:space="preserve">
+    <value>Mit Infistars API</value>
   </data>
 </root>
