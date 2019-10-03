@@ -1,22 +1,32 @@
 ﻿using System;
 using System.IO; 
-using System.Net.Http;  
+using System.Net.Http; 
 using System.Runtime.InteropServices; 
 using System.Text.RegularExpressions;
-using System.Threading.Tasks; 
-using Newtonsoft.Json.Linq; 
+using System.Threading.Tasks;  
+using Newtonsoft.Json.Linq;
 
 namespace infiBanChecker.Utils
 {
     internal sealed class Helpers
     {
         #region Reference Data Types  
-        internal static System.Reflection.Assembly _assembly = System.Reflection.Assembly.GetExecutingAssembly();
+        internal static System.Reflection.Assembly _assembly = typeof(Helpers).Assembly;  
         internal static API api; 
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
         private static string APIErrorMessage;
         private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error, isTokenOk = false;
         private static HttpResponseMessage APIresponse;
+        #endregion
+
+        #region Resolve Embedded Assemblies
+        internal static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var stream = _assembly.GetManifestResourceStream("infiBanChecker.EmbeddedAssemblies.Newtonsoft.Json.dll");
+            var assemblyData = new Byte[stream.Length];
+            stream.Read(assemblyData, 0, assemblyData.Length);
+            return System.Reflection.Assembly.Load(assemblyData);
+        }
         #endregion
 
         #region Read Steam64 from Console

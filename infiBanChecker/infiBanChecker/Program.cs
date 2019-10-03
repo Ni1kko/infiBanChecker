@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System; 
 using System.Threading.Tasks; 
 
 namespace infiBanChecker
@@ -9,12 +9,16 @@ namespace infiBanChecker
         //      Major Version
         //      Minor Version
         //      Build Number 
-        internal const string version = "1.1.0";
+        internal const string version = "2.0.0";
         #endregion
 
         #region EntryPoint
         private static async Task Main()
-        {  
+        {
+            #region Subscibe AssemblyResolve to resolve embedded assemblies
+            AppDomain.CurrentDomain.AssemblyResolve += Utils.Helpers.CurrentDomain_AssemblyResolve; 
+            #endregion
+
             #region Setup the console window parameters
             Utils.Helpers.setupConsole(
                 $"{Utils.Helpers._assembly.GetName().Name}",
