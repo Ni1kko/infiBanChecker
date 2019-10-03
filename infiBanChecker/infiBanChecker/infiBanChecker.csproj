@@ -47,6 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Localization.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\API.cs" />
     <Compile Include="Utils\Endpoint.cs" />
     <Compile Include="Utils\Helpers.cs" />
@@ -54,12 +59,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\InfiBanCheck.cs" />
   </ItemGroup>
-  <ItemGroup>  
+  <ItemGroup>
     <None Include="Properties\App.config" />
     <None Include="Properties\packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EmbeddedAssemblies\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Properties\Localization.de.resx" />
+    <EmbeddedResource Include="Properties\Localization.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -33,10 +33,10 @@ namespace infiBanChecker.Utils
         private static string readSid64FromConsole
         {
             get
-            {
+            { 
                 Console.Clear();
-                Console.WriteLine("Enter The SteamID You Want To Check Ban Status For\n");
-                Console.WriteLine("SteamID64: ");
+                Console.WriteLine("{0}\n", Properties.Localization.EnterSteam64Message);
+                Console.WriteLine("{0}: ", Properties.Localization.Steam64);
                 return Console.ReadLine();
             }
         }
@@ -51,9 +51,9 @@ namespace infiBanChecker.Utils
             {
                 jfile = JToken.ReadFrom(jreader) as JObject;
                 if (jfile == null || !jfile.ContainsKey(token))
-                {
-                    Console.WriteLine($"Unable to find Json Token:( '{token}' )");
-                    Console.WriteLine("Press `ANY Key` To Exit");
+                { 
+                    Console.WriteLine("{0}:( '{1}' )", Properties.Localization.JsonTokenMissingMessage, token);
+                    Console.WriteLine(Properties.Localization.AnyKeyToExitMessage);
                     Console.ReadKey();
                     Task.Delay(timeSeconds(2));
                     Environment.Exit(0);
@@ -80,6 +80,9 @@ namespace infiBanChecker.Utils
 
         internal static void setupConsole(string title, int h, int w, ConsoleColor col_bg = ConsoleColor.Black, ConsoleColor col_txt = ConsoleColor.White)
         {
+            //Slightly increase console width if localization in not english
+            w = (Program.localization == "en-EN") ? w : (w + 15);
+
             Console.Title = title;
             Console.BackgroundColor = col_bg;
             Console.ForegroundColor = col_txt;
@@ -134,8 +137,8 @@ namespace infiBanChecker.Utils
                 api.steamID = (string)stringCheck[1];
                 if (api.steamID.Length == 17 && !isSteam64Error)
                 {
-                    Console.Clear();
-                    Console.WriteLine("Validating SteamID: `{0}` With Infistar's API\n", api.steamID);
+                    Console.Clear(); 
+                    Console.WriteLine("{0}: `{1}` {2}\n", Properties.Localization.ValidatingSteam64Message, api.steamID, Properties.Localization.ValidatingWithAPIMessage);
                     break;
                 }
             }
@@ -161,11 +164,13 @@ namespace infiBanChecker.Utils
                 if (isUrlParametersValid)
                 {
                     isGlobalBanned = (data.message.state == "1");
-                    Console.Clear();
-                    Console.WriteLine($"Found Result For SteamID: {data.message.uid}\r\n");
-                    Console.WriteLine(
-                        $"{(isGlobalBanned ? ("GlobalBan | " + data.message.bandate + "\r\n") : "Clean\r\n")}");
+                    Console.Clear(); 
+                    Console.WriteLine("{0}: {1}\r\n", Properties.Localization.ResultFoundMessage, data.message.uid);
 
+                    if (isGlobalBanned) 
+                        Console.WriteLine("{0} | {1}\r\n", Properties.Localization.BanGlobal, data.message.bandate);
+                    else 
+                        Console.WriteLine("{0}\r\n", Properties.Localization.BanClean);
                 }
                 #endregion
             }
@@ -178,7 +183,7 @@ namespace infiBanChecker.Utils
             #endregion
 
             #region Wait for user input
-            Console.WriteLine("Press `ANY Key` To Lookup another ID");
+            Console.WriteLine(Properties.Localization.AnyKeyToSearchAnotherMessage);
             Console.ReadKey();
             #endregion
 
@@ -204,16 +209,16 @@ namespace infiBanChecker.Utils
             isTokenOk = !isTokenOk;
            
             if (tokenFromJson == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-            {
-                Console.WriteLine($"You must edit `infiStarLic` and add you license token \nconfig file can be found here\r\n\r\n{_config}\r\n\r\n");
+            { 
+                Console.WriteLine("{0} \n{1}\r\n\r\n{2}\r\n\r\n", Properties.Localization.EditDefaultConfigMessage, Properties.Localization.ConfigCanBeFoundMessage, _config);
                 await exitConsole();
             }
             else
             {
                 // infistar license to short
                 if (tokenFromJson.Length< 30)
-                {
-                    Console.WriteLine("infiStarLic license token is too short\r\nplease check and try again\r\n\r\n");
+                { 
+                       Console.WriteLine("{0}\r\n{1}\r\n\r\n", Properties.Localization.InfiLicenseTooShortMessage, Properties.Localization.CheckAndTryAgainMessage);
                     await exitConsole();
                 }
                 else
@@ -221,7 +226,8 @@ namespace infiBanChecker.Utils
                     // infistar license invalid format
                     if (!(bool) stringContainsInteger(tokenFromJson)[0])
                     {
-                        Console.WriteLine("infiStarLic license token format invalid\r\nplease check and try again\r\n\r\n");
+
+                        Console.WriteLine("{0}\r\n{1}\r\n\r\n", Properties.Localization.InfiLicenseInvalidMessage, Properties.Localization.CheckAndTryAgainMessage);
                         await exitConsole();
                     }
                     else
@@ -317,7 +323,7 @@ namespace infiBanChecker.Utils
         #region exitConsole
         internal static async Task exitConsole(int timeout = 10)
         {
-            Console.WriteLine("Press `ANY Key` To Exit");
+            Console.WriteLine(Properties.Localization.AnyKeyToExitMessage);
             Console.ReadKey();
             while (timeout > 0)
             {
@@ -326,7 +332,7 @@ namespace infiBanChecker.Utils
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine($"Exiting in {timeout} Seconds...");
+                    Console.WriteLine("{0} {1} {2}...", Properties.Localization.ExitingInMessage, timeout, Properties.Localization.Seconds);
                     await Task.Delay(Helpers.timeSeconds(1));
                 }
             }
