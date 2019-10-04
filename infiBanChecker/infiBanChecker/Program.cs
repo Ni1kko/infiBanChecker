@@ -8,7 +8,7 @@ namespace infiBanChecker
         //      Major Version
         //      Minor Version
         //      Build Number 
-        internal const string version = "2.2.0";
+        internal const string version = "2.2.1";
         #endregion
          
         #region EntryPoint
@@ -28,7 +28,7 @@ namespace infiBanChecker
             #endregion
 
             #region Start BanChecker
-            var infiBanCheck = new Utils.InfiBanCheck();
+            var infiBanCheck = new InfiBanCheck();
             await infiBanCheck.Run();
             #endregion 
         }

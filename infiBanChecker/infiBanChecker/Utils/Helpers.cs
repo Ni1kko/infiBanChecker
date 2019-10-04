@@ -1,23 +1,22 @@
 ﻿using System;
 using System.IO; 
-using System.Net.Http; 
+using System.Net.Http;
+using System.Reflection;
 using System.Runtime.InteropServices; 
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using static infiBanChecker.Localization.Language;
-
+ 
 namespace infiBanChecker.Utils
 {
     internal sealed class Helpers
-    { 
+    {
         #region Reference Data Types  
-        internal static System.Reflection.Assembly _assembly = typeof(Helpers).Assembly;  
-        internal static API api; 
+        internal static API _api;
+        internal static Assembly _assembly = typeof(Helpers).Assembly;   
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
-        private static string APIErrorMessage;
         private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error, isTokenOk = false;
-        private static HttpResponseMessage APIresponse; 
         #endregion
 
         #region Resolve Embedded Assemblies
@@ -64,7 +63,7 @@ namespace infiBanChecker.Utils
         }
         #endregion
          
-        #region setupConsole 
+        #region SetupConsole 
 
         #region Parameters
         private const int MF_BYCOMMAND = 0x00000000;
@@ -163,7 +162,7 @@ namespace infiBanChecker.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error communicating with {api.endpoint} : {ex.Message} -> {ex.InnerException?.Message}");
+                Console.WriteLine($"Error communicating with {_api.endpoint} : {ex.Message} -> {ex.InnerException?.Message}");
             }
             #endregion
 
@@ -194,7 +193,7 @@ namespace infiBanChecker.Utils
 
             #region Connect to api and get response   
             HttpClient webClientInstance = connectToEndpoint(api);
-            APIresponse = getUriResponseResult( // Blocking call! Code will wait here until a response is received or a timeout occurs.
+            api.response = getUriResponseResult( // Blocking call! Code will wait here until a response is received or a timeout occurs.
                 webClient: webClientInstance,
                 apiQuery: (api.uri)
                 );
@@ -204,7 +203,7 @@ namespace infiBanChecker.Utils
             dynamic data = null;
             try
             {
-                data = JObject.Parse(APIresponse.Content.ReadAsStringAsync().Result);
+                data = JObject.Parse(api?.response?.Content.ReadAsStringAsync()?.Result);
             }
             catch (Exception ex)
             {
@@ -213,7 +212,7 @@ namespace infiBanChecker.Utils
             #endregion
 
             #region Check response
-            if (APIresponse.IsSuccessStatusCode)
+            if (api.response.IsSuccessStatusCode)
             {
                 #region Check infistars API responded with success 
 
@@ -234,9 +233,8 @@ namespace infiBanChecker.Utils
             }
             else
             {
-                APIErrorMessage = data?.message;
-                APIErrorMessage = APIErrorMessage.Length < 1 ? APIresponse.ReasonPhrase : data?.message;
-                Console.WriteLine("{0} ({1})\r\n", (int)APIresponse.StatusCode, APIErrorMessage);
+                _api.statusCodeMessage = (data?.message.Length < 1) ?  api?.response.ReasonPhrase : data?.message;
+                Console.WriteLine("{0} ({1})\r\n", (int)api?.response?.StatusCode, _api.statusCodeMessage);
             }
             #endregion
 
@@ -298,10 +296,10 @@ namespace infiBanChecker.Utils
                     else
                     {
                         //Set infistar token
-                        api.infiToken = tokenFromJson;
+                        _api.infiToken = tokenFromJson;
 
                         //Append infistar token to the console title
-                        Console.Title += $" | {api.infiToken}";
+                        Console.Title += $" | {_api.infiToken}";
                     } 
                 } 
             }
@@ -309,13 +307,11 @@ namespace infiBanChecker.Utils
         }
         #endregion
 
-        #region config
-        /// temp
-        /// Todo: Use jsonWriter 
+        #region Config
         /// <summary>
-        /// writes token & value too Json
+        /// writes token & value too Json (Could be doing with finding a better way)
         /// </summary>
-        private static async Task<bool> configWriter(string[] arr)
+        private static Task configWriter(string[] arr)
         {
             var _jsonOut = new System.Text.StringBuilder(arr.Length);
             
@@ -325,17 +321,19 @@ namespace infiBanChecker.Utils
                 _jsonOut.Append($"\t\"{aSplit[0]}\":\"{aSplit[1]}\",\r\n"); 
             }
 
+            Task.Delay(timeSeconds(2));
+
             if (_jsonOut.Length > 1)
             {
                 File.WriteAllText(
-                    contents: "{\r\n\r\n" + 
-                                _jsonOut +
-                              "\r\n}", 
-                    path: _config 
-               );  
+                    contents: "{\r\n\r\n" +
+                              _jsonOut +
+                              "\r\n}",
+                    path: _config
+                );
             }
 
-            return true;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -385,7 +383,7 @@ namespace infiBanChecker.Utils
 
         #endregion
 
-        #region exitConsole
+        #region ExitConsole
         internal static async Task exitConsole(int timeout = 10)
         {
             Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
