@@ -125,23 +125,51 @@ namespace infiBanChecker.Utils
         #region Webclient Connect 
         private static HttpClient connectToEndpoint(API api)
         {
-            #region Setup Http Instance
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(api.endpoint);
-            #endregion
 
-            #region Add accept header for JSON 
-            client.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
-            );
-            #endregion  
+            #region Attempt connection
+            try
+            { 
+                client.BaseAddress = new Uri(api.endpoint);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error with connection with {api.endpoint} : {ex.Message} -> {ex.InnerException?.Message}");
+            }
+            finally
+            {
+                #region Add accept header for JSON 
+                client.DefaultRequestHeaders.Accept.Add(
+                    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
+                );
+                #endregion  
+            }
+            #endregion
 
             return client;
         }
         #endregion
 
-        #region Webclient Response Result 
-        private static HttpResponseMessage getUriResponseResult(string apiQuery, HttpClient webClient) => webClient.GetAsync(apiQuery).Result;
+        #region Webclient Response Result
+        
+        private static HttpResponseMessage getUriResponseResult(string apiQuery, HttpClient webClient)
+        {
+            HttpResponseMessage response = null;
+
+            #region Attempt Communication
+            try
+            {
+                response = webClient.GetAsync(apiQuery).Result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error communicating with {api.endpoint} : {ex.Message} -> {ex.InnerException?.Message}");
+            }
+            #endregion
+
+            return response;
+        } 
+        
         #endregion
 
         #region CheckSteamID 
@@ -173,44 +201,61 @@ namespace infiBanChecker.Utils
             #endregion
 
             #region Parse the response
-            dynamic data = JObject.Parse(APIresponse.Content.ReadAsStringAsync().Result);
-            isUrlParametersValid = (data.status == "success");
+            dynamic data = null;
+            try
+            {
+                data = JObject.Parse(APIresponse.Content.ReadAsStringAsync().Result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error parsing response from {api.endpoint}: {ex.Message} -> {ex.InnerException?.Message}");
+            }
             #endregion
 
             #region Check response
             if (APIresponse.IsSuccessStatusCode)
             {
-                #region Check infistars API responded with success    
+                #region Check infistars API responded with success 
+
+                isUrlParametersValid = (data?.status == "success");
+
                 if (isUrlParametersValid)
                 {
-                    isGlobalBanned = (data.message.state == "1");
+                    isGlobalBanned = (data?.message.state == "1");
                     Console.Clear(); 
-                    Console.WriteLine("{0}: {1}\r\n", Localization.Language.ResultFoundMessage, data.message.uid);
+                    Console.WriteLine("{0}: {1}\r\n", ResultFoundMessage, data?.message?.uid);
 
                     if (isGlobalBanned) 
-                        Console.WriteLine("{0} | {1}\r\n", Localization.Language.BanGlobal, data.message.bandate);
+                        Console.WriteLine("{0} | {1}\r\n", BanGlobal, data?.message?.bandate);
                     else 
-                        Console.WriteLine("{0}\r\n", Localization.Language.BanClean);
+                        Console.WriteLine("{0}\r\n", BanClean);
                 }
                 #endregion
             }
             else
             {
-                APIErrorMessage = data.message;
-                APIErrorMessage = APIErrorMessage.Length < 1 ? APIresponse.ReasonPhrase : data.message;
+                APIErrorMessage = data?.message;
+                APIErrorMessage = APIErrorMessage.Length < 1 ? APIresponse.ReasonPhrase : data?.message;
                 Console.WriteLine("{0} ({1})\r\n", (int)APIresponse.StatusCode, APIErrorMessage);
             }
             #endregion
 
             #region Wait for user input
-            Console.WriteLine(Localization.Language.AnyKeyToSearchAnotherMessage);
+            Console.WriteLine(AnyKeyToSearchAnotherMessage);
             Console.ReadKey();
             #endregion
 
-            #region Cleanup 
-            Console.Clear();
-            webClientInstance.Dispose();//HttpClient instance is disposed automatically when the application terminates so the following call is to dispose old client for searching another steamid.
-            await Task.Delay(400);
+            #region Cleanup  
+            try
+            {
+                Console.Clear();
+                webClientInstance.Dispose();//HttpClient instance is disposed automatically when the application terminates so the following call is to dispose old client for searching another steamid.
+                await Task.Delay(400);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error disposing connection with {api.endpoint}: {ex.Message} -> {ex.InnerException?.Message}");
+            } 
             #endregion
         }
         #endregion
