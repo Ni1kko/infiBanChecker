@@ -150,7 +150,7 @@
   <data name="InfiLicenseTooShortMessage" xml:space="preserve">
     <value>infiStarLic licenstoken er for kort</value>
   </data>
-  <data name="JsonTokenMissingMessage" xml:space="preserve">
+  <data name="JsonKeyMissingMessage" xml:space="preserve">
     <value>Kan ikke finde Json-token</value>
   </data>
   <data name="ResultFoundMessage" xml:space="preserve">

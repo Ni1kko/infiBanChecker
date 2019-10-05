@@ -150,8 +150,8 @@
   <data name="InfiLicenseTooShortMessage" xml:space="preserve">
     <value>infiStarLic license token is too short</value>
   </data>
-  <data name="JsonTokenMissingMessage" xml:space="preserve">
-    <value>Unable to find Json Token</value>
+  <data name="JsonKeyMissingMessage" xml:space="preserve">
+    <value>Unable to find Json Key</value>
   </data>
   <data name="ResultFoundMessage" xml:space="preserve">
     <value>Found Result For SteamID</value>
