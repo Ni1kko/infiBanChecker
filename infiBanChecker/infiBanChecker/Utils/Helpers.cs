@@ -7,7 +7,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using static infiBanChecker.Localization.Language;
- 
+using static System.Threading.Thread;
+
 namespace infiBanChecker.Utils
 {
     internal sealed class Helpers
@@ -243,6 +244,43 @@ namespace infiBanChecker.Utils
             return (seconds * 1000);
         }
         #endregion
+
+        #region Culture Code
+        internal enum CultureCode
+        {
+            English,
+            Danish,
+            German,
+            French,
+            Russian,
+            Polish
+        }
+
+        internal static string CurrentCultureCode => CurrentThread.CurrentUICulture.Name;
+
+        internal static string GetCultureCode(CultureCode cc)
+        {
+            switch (cc)
+            {
+                case CultureCode.English:
+                    return "en-EN";
+                case CultureCode.Danish:
+                    return "da-DK";
+                case CultureCode.German:
+                    return "da-DK";
+                case CultureCode.French:
+                    return "br-FR";
+                case CultureCode.Russian:
+                    return "ru-RU";
+                case CultureCode.Polish:
+                    return "pl-PL";
+                default:
+                    return "";
+            }
+        }
+   
+
+    #endregion
 
         #region Check InfiStar Token 
         internal static async Task<bool> checkInfiStarToken(string tokenFromJson)
