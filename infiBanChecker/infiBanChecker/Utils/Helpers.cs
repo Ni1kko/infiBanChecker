@@ -41,28 +41,7 @@ namespace infiBanChecker.Utils
             }
         }
         #endregion
-
-        #region Read Token Value From Json
-        internal static object jsonContainsKey(string token)
-        {
-            var jRead = File.OpenText(_config);
-            JObject jfile;
-            using (var jreader = new Newtonsoft.Json.JsonTextReader(jRead))
-            {
-                jfile = JToken.ReadFrom(jreader) as JObject;
-                if (jfile == null || !jfile.ContainsKey(token))
-                { 
-                    Console.WriteLine("{0}:( '{1}' )", Localization.Language.JsonTokenMissingMessage, token);
-                    Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
-                    Console.ReadKey();
-                    Task.Delay(timeSeconds(2));
-                    Environment.Exit(0);
-                }
-                return jfile.GetValue(token).ToString();
-            } 
-        }
-        #endregion
-         
+  
         #region SetupConsole 
 
         #region Parameters
@@ -271,9 +250,9 @@ namespace infiBanChecker.Utils
             if (isTokenOk) return true;
             isTokenOk = !isTokenOk;
            
-            if (tokenFromJson == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+            if (Json.getInstance().Generated || tokenFromJson == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
             { 
-                Console.WriteLine("{0} \n{1}\r\n\r\n{2}\r\n\r\n", Localization.Language.EditDefaultConfigMessage, Localization.Language.ConfigCanBeFoundMessage, _config);
+                Console.WriteLine("{0} \n{1}\r\n\r\n{2}\r\n\r\n", EditDefaultConfigMessage, ConfigCanBeFoundMessage, _config);
                 await exitConsole();
             }
             else
@@ -281,7 +260,7 @@ namespace infiBanChecker.Utils
                 // infistar license to short
                 if (tokenFromJson.Length< 30)
                 { 
-                       Console.WriteLine("{0}\r\n{1}\r\n\r\n", Localization.Language.InfiLicenseTooShortMessage, Localization.Language.CheckAndTryAgainMessage);
+                       Console.WriteLine("{0}\r\n{1}\r\n\r\n", InfiLicenseTooShortMessage, CheckAndTryAgainMessage);
                     await exitConsole();
                 }
                 else
@@ -289,8 +268,7 @@ namespace infiBanChecker.Utils
                     // infistar license invalid format
                     if (!(bool) stringContainsInteger(tokenFromJson)[0])
                     {
-
-                        Console.WriteLine("{0}\r\n{1}\r\n\r\n", Localization.Language.InfiLicenseInvalidMessage, Localization.Language.CheckAndTryAgainMessage);
+                        Console.WriteLine("{0}\r\n{1}\r\n\r\n", InfiLicenseInvalidMessage, CheckAndTryAgainMessage);
                         await exitConsole();
                     }
                     else
@@ -306,83 +284,7 @@ namespace infiBanChecker.Utils
             return true;
         }
         #endregion
-
-        #region Config
-        /// <summary>
-        /// writes token & value too Json (Could be doing with finding a better way)
-        /// </summary>
-        private static Task configWriter(string[] arr)
-        {
-            var _jsonOut = new System.Text.StringBuilder(arr.Length);
-            
-            foreach (var a in arr)
-            {
-                var aSplit = a.Split(':');
-                _jsonOut.Append($"\t\"{aSplit[0]}\":\"{aSplit[1]}\",\r\n"); 
-            }
-
-            Task.Delay(timeSeconds(2));
-
-            if (_jsonOut.Length > 1)
-            {
-                File.WriteAllText(
-                    contents: "{\r\n\r\n" +
-                              _jsonOut +
-                              "\r\n}",
-                    path: _config
-                );
-            }
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// create default config
-        /// </summary>
-        private static async Task<bool> createConfig()
-        {  
-            bool mismatch = false; 
-            string[] jsonData = {
-                "infiStarLic:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-            };
-
-            if (!File.Exists(_config))
-            {
-                configWriter(jsonData).Wait(); 
-                using (var jreader = new Newtonsoft.Json.JsonTextReader(File.OpenText(_config)))
-                {
-                    JObject jfile = JToken.ReadFrom(jreader) as JObject;
-                    foreach (var data in jsonData)
-                    {
-                        if (mismatch) break;
-                        if (jfile == null || !jfile.ContainsKey((string)jsonContainsKey(data.Split(':')[0])))
-                        {
-                            mismatch = !mismatch;
-                        }
-                    }
-                }
-            } 
-            return mismatch;
-        }
-
-        /// <summary>
-        /// checks config exists if not try create default config
-        /// </summary> 
-        internal static async Task<bool> configExists()
-        { 
-            if (!File.Exists(_config))
-            {
-                if (!await createConfig())
-                {
-                    Console.WriteLine("unable to create config\r\nplease make sure app is in a folder where it has permissions and try again\r\n\r\n");
-                    await exitConsole();
-                }
-            }
-            return File.Exists(_config);
-        }
-
-        #endregion
-
+         
         #region ExitConsole
         internal static async Task exitConsole(int timeout = 10)
         {
