@@ -8,7 +8,7 @@ namespace infiBanChecker
         //      Major Version
         //      Minor Version
         //      Build Number 
-        internal const string version = "2.2.1";
+        internal const string version = "3.0.0";
         #endregion
          
         #region EntryPoint

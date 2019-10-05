@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -68,22 +65,26 @@ namespace infiBanChecker.Utils
         #region Checks config exists.
         private bool exists()
         {
-            var jfile = (JObject) JToken.ReadFrom(
-                reader: new JsonTextReader(File.OpenText(Helpers._config)));
+            if (File.Exists(Helpers._config))
+            {
+                var jfile = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(Helpers._config)));
 
-            foreach (string key in keys)
-            {  
-                if (jfile == null || !jfile.ContainsKey(key))
-                {
-                    Console.WriteLine("{0}:( '{1}' )", Localization.Language.JsonKeyMissingMessage, key);
-                    Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
-                    Console.ReadKey();
-                    Task.Delay(Helpers.timeSeconds(2));
-                    Environment.Exit(0);
+                foreach (string key in keys)
+                {  
+                    if (jfile == null || !jfile.ContainsKey(key))
+                    {
+                        Console.WriteLine("{0}:( '{1}' )", Localization.Language.JsonKeyMissingMessage, key);
+                        Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
+                        Console.ReadKey();
+                        Task.Delay(Helpers.timeSeconds(2));
+                        Environment.Exit(0);
+                    }
                 }
+
+                return true;
             } 
 
-            return File.Exists(Helpers._config); 
+            return false; 
         }
         #endregion
 
