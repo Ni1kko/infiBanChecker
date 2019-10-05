@@ -5,17 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace infiBanChecker.Utils
 {
     public struct JsonData
-    {
+    { 
         [JsonProperty("InfistarToken")]
         public string InfistarAccessToken { get; set; }
     }
 
     public class Json
-    { 
+    {
+        public string[] keys = { "InfistarToken" }; 
         public JsonData config;
         public bool Generated = false;
 
@@ -30,7 +32,9 @@ namespace infiBanChecker.Utils
             #endregion
             else
             #region Create & Load config 
-            {
+            { 
+                if (File.Exists(Helpers._config)) File.Delete(Helpers._config);
+
                 Generated = true;
 
                 using (var writer = new StreamWriter(File.Create(Helpers._config)))
@@ -64,8 +68,25 @@ namespace infiBanChecker.Utils
         #region Checks config exists.
         private bool exists()
         {
-            return File.Exists(Helpers._config);
+            var jfile = (JObject) JToken.ReadFrom(
+                reader: new JsonTextReader(File.OpenText(Helpers._config)));
+
+            foreach (string key in keys)
+            {  
+                if (jfile == null || !jfile.ContainsKey(key))
+                {
+                    Console.WriteLine("{0}:( '{1}' )", Localization.Language.JsonKeyMissingMessage, key);
+                    Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
+                    Console.ReadKey();
+                    Task.Delay(Helpers.timeSeconds(2));
+                    Environment.Exit(0);
+                }
+            } 
+
+            return File.Exists(Helpers._config); 
         }
         #endregion
+
+         
     }
 }
