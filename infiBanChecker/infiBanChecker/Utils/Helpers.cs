@@ -13,6 +13,8 @@ namespace infiBanChecker.Utils
 {
     internal sealed class Helpers
     {
+        internal static Helpers getInstance() { return new Helpers(); }
+        
         #region Reference Data Types  
         internal static API _api;
         internal static Assembly _assembly = typeof(Helpers).Assembly;   
@@ -21,12 +23,36 @@ namespace infiBanChecker.Utils
         #endregion
 
         #region Resolve Embedded Assemblies
-        internal static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        internal Assembly AssemblyResolver(object sender, ResolveEventArgs args)
         {
-            var stream = _assembly.GetManifestResourceStream("infiBanChecker.EmbeddedAssemblies.Newtonsoft.Json.dll");
-            var assemblyData = new Byte[stream.Length];
-            stream.Read(assemblyData, 0, assemblyData.Length);
-            return System.Reflection.Assembly.Load(assemblyData);
+            AssemblyName askedAssembly = new AssemblyName(args.Name);
+
+            lock (this)
+            {
+                Assembly assembly = null;
+                Stream stream = _assembly.GetManifestResourceStream($"infiBanChecker.EmbeddedAssemblies.{askedAssembly.Name}.dll");
+
+                if (stream != null)
+                {
+                    var assemblyData = new byte[stream.Length];
+                    try
+                    {
+                        stream.Read(assemblyData, 0, assemblyData.Length);
+                        assembly = Assembly.Load(assemblyData);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Loading embedded assembly: {0}\r\nHas thrown a unhandled exception: {1}", askedAssembly.Name, e);
+                        //Console.ReadKey();
+                    }
+                    finally
+                    {
+                        if(assembly != null)
+                            Console.WriteLine("Loaded embedded assembly: {0}", askedAssembly.Name);
+                    }
+                }
+                return assembly;
+            }
         }
         #endregion
 

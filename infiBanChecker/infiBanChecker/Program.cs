@@ -13,9 +13,9 @@ namespace infiBanChecker
          
         #region EntryPoint
         private static async Task Main()
-        {  
-            #region Subscibe AssemblyResolve to resolve embedded assemblies
-            AppDomain.CurrentDomain.AssemblyResolve += Utils.Helpers.CurrentDomain_AssemblyResolve; 
+        {
+            #region Subscribe Assembly Resolver
+            AppDomain.CurrentDomain.AssemblyResolve += Utils.Helpers.getInstance().AssemblyResolver;
             #endregion
 
             #region Setup the console window parameters
@@ -26,12 +26,13 @@ namespace infiBanChecker
                 col_txt: System.ConsoleColor.Black
             );
             #endregion
-
+            
             #region Start BanChecker
             var infiBanCheck = new InfiBanCheck();
             await infiBanCheck.Run();
             #endregion 
         }
-        #endregion 
-    } 
+        #endregion
+        
+    }
 }
