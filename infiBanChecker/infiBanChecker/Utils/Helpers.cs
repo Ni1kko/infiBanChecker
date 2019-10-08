@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using static infiBanChecker.Localization.Language;
 using static System.Threading.Thread;
+using SteamKit2;
 
 namespace infiBanChecker.Utils
 {
@@ -19,7 +20,7 @@ namespace infiBanChecker.Utils
         internal static API _api;
         internal static Assembly _assembly = typeof(Helpers).Assembly;   
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
-        private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error, isTokenOk = false;
+        private static bool isUrlParametersValid, isGlobalBanned, isTokenOk = false;
         #endregion
 
         #region Resolve Embedded Assemblies
@@ -57,14 +58,14 @@ namespace infiBanChecker.Utils
         #endregion
 
         #region Read Steam64 from Console
-        private static string readSid64FromConsole
+        private static ulong readSid64FromConsole
         {
             get
-            { 
+            {
                 Console.Clear();
-                Console.WriteLine("{0}\n", Localization.Language.EnterSteam64Message);
-                Console.WriteLine("{0}: ", Localization.Language.Steam64);
-                return Console.ReadLine();
+                Console.WriteLine("{0}\n", EnterSteam64Message);
+                Console.WriteLine("{0}: ", Steam64);
+                return ulong.Parse(Console.ReadLine() ?? "");
             }
         }
         #endregion
@@ -180,20 +181,15 @@ namespace infiBanChecker.Utils
         #region CheckSteamID 
         internal static async Task CheckSteam64(API api)
         {
-            #region Check SteamID is valid SteamID number  
-            api.steamID = "";
-            isSteam64Error = false;
-            while (api.steamID.Length < 17 || api.steamID.Length > 17 || isSteam64Error)
+            #region Check SteamID is valid SteamID number   
+
+            //Todo: Convert SteamID
+            api.steamID = readSid64FromConsole; 
+            
+            if (api.steamID.IsValid)
             {
-                var stringCheck = stringContainsInteger(readSid64FromConsole);
-                isSteam64Error = (bool)stringCheck[0];
-                api.steamID = (string)stringCheck[1];
-                if (api.steamID.Length == 17 && !isSteam64Error)
-                {
-                    Console.Clear(); 
-                    Console.WriteLine("{0}: `{1}` {2}\n", Localization.Language.ValidatingSteam64Message, api.steamID, Localization.Language.ValidatingWithAPIMessage);
-                    break;
-                }
+                Console.Clear();
+                Console.WriteLine("{0}: `{1}` {2}\n", Localization.Language.ValidatingSteam64Message, api.steamID, Localization.Language.ValidatingWithAPIMessage);
             }
             #endregion
 
@@ -239,7 +235,7 @@ namespace infiBanChecker.Utils
             }
             else
             {
-                _api.statusCodeMessage = (data?.message.Length < 1) ?  api?.response.ReasonPhrase : data?.message;
+                _api.statusCodeMessage = data?.message ?? api?.response.ReasonPhrase;
                 Console.WriteLine("{0} ({1})\r\n", (int)api?.response?.StatusCode, _api.statusCodeMessage);
             }
             #endregion

@@ -21,7 +21,7 @@ namespace infiBanChecker
             #region Setup the console window parameters
             Utils.Helpers.setupConsole(
                 $"{Utils.Helpers._assembly.GetName().Name}",
-                w: 65, h: 15,
+                w: 65, h: 25,
                 col_bg: System.ConsoleColor.White,
                 col_txt: System.ConsoleColor.Black
             );

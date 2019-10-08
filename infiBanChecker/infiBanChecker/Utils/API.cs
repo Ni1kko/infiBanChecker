@@ -1,12 +1,14 @@
 ﻿// ReSharper disable ArrangeAccessorOwnerBody
 using System.Net.Http;
+using SteamKit2;
 using static infiBanChecker.Utils.Helpers;
 
 namespace infiBanChecker.Utils
 { 
     internal abstract class ApiData
     {
-        private protected string _infiToken, _infiSteam64;
+        private protected SteamID _Steam64;
+        private protected string _infiToken;
         private protected const string _endpoint = "https://api.infistar.de/";
         private protected HttpResponseMessage _apiResponse;
         private static string _statusCodeMessage;
@@ -16,10 +18,10 @@ namespace infiBanChecker.Utils
             get => _infiToken;
             set => _infiToken = value;
         }
-        public virtual string steamID
+        public virtual SteamID steamID
         {
-            get => _infiSteam64;
-            set => _infiSteam64 = value;
+            get => _Steam64;
+            set => _Steam64 = value;
         }
         public virtual HttpResponseMessage response
         {
