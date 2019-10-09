@@ -41,7 +41,7 @@ namespace infiBanChecker.Utils
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Loading embedded assembly: {0}\r\nHas thrown a unhandled exception: {1}", askedAssembly.Name, e);
+                    Console.WriteLine("Loading embedded assembly: {1}{0}Has thrown a unhandled exception: {2}", Environment.NewLine, askedAssembly.Name, e);
                     _ = exitConsole(10);//unsure on this i've never used discards before.
                 }
                 finally
@@ -53,21 +53,8 @@ namespace infiBanChecker.Utils
             }
         }
         #endregion
-
-        #region Read Steam64 from Console
-        private static string readSid64FromConsole
-        {
-            get
-            {
-                Console.Clear();
-                Console.WriteLine("{0}\n", EnterSteam64Message);
-                Console.WriteLine("{0}: ", Steam64);
-                return Console.ReadLine();
-            }
-        }
-        #endregion
-  
-        #region SetupConsole 
+         
+        #region Setup Console 
 
         #region Parameters
         private const int MF_BYCOMMAND = 0x00000000;
@@ -121,8 +108,40 @@ namespace infiBanChecker.Utils
 
         #endregion
 
-        #region stringContainsInteger 
-        internal static object[] stringContainsInteger(string stringInteger) => new object[] { (Regex.Matches(stringInteger, @"[a-zA-Z]").Count > 0), stringInteger };
+        #region Culture Code
+        internal enum CultureCode
+        {
+            English,
+            Danish,
+            German,
+            French,
+            Russian,
+            Polish
+        }
+
+        internal static string CurrentCultureCode => CurrentThread.CurrentUICulture.Name;
+
+        internal static string GetCultureCode(CultureCode cc)
+        {
+            switch (cc)
+            {
+                case CultureCode.English:
+                    return "en-EN";
+                case CultureCode.Danish:
+                    return "da-DK";
+                case CultureCode.German:
+                    return "da-DK";
+                case CultureCode.French:
+                    return "br-FR";
+                case CultureCode.Russian:
+                    return "ru-RU";
+                case CultureCode.Polish:
+                    return "pl-PL";
+                default:
+                    return "";
+            }
+        }
+         
         #endregion
 
         #region Webclient Connect 
@@ -175,7 +194,27 @@ namespace infiBanChecker.Utils
 
         #endregion
 
-        #region CheckSteamID 
+        #region Seconds To MilSeconds 
+        internal static int timeSeconds(int seconds)
+        {
+            return (seconds * 1000);
+        }
+        #endregion
+
+        #region Read SteamID64 from Console
+        private static string readSid64FromConsole
+        {
+            get
+            {
+                Console.Clear();
+                Console.WriteLine("{0}" + Environment.NewLine, EnterSteam64Message);
+                Console.WriteLine("{0}: ", Steam64);
+                return Console.ReadLine();
+            }
+        }
+        #endregion
+
+        #region CheckSteamID64
         internal static async Task CheckSteam64(API api)
         {
             #region Check SteamID is valid SteamID number 
@@ -192,7 +231,7 @@ namespace infiBanChecker.Utils
             if (api.steamID.IsValid)
             {
                 Console.Clear();
-                Console.WriteLine("{0}: `{1}` {2}\n", ValidatingSteam64Message, api.steamID, ValidatingWithAPIMessage);
+                Console.WriteLine("{0}: `{1}` {2}" + Environment.NewLine, ValidatingSteam64Message, api.steamID, ValidatingWithAPIMessage);
             } 
 
             #endregion
@@ -228,19 +267,19 @@ namespace infiBanChecker.Utils
                 {
                     isGlobalBanned = (data?.message.state == "1");
                     Console.Clear(); 
-                    Console.WriteLine("{0}: {1}\r\n", ResultFoundMessage, data?.message?.uid);
+                    Console.WriteLine("{0}: {1}" + Environment.NewLine, ResultFoundMessage, data?.message?.uid);
 
                     if (isGlobalBanned) 
-                        Console.WriteLine("{0} | {1}\r\n", BanGlobal, data?.message?.bandate);
+                        Console.WriteLine("{0} | {1}" + Environment.NewLine, BanGlobal, data?.message?.bandate);
                     else 
-                        Console.WriteLine("{0}\r\n", BanClean);
+                        Console.WriteLine("{0}" + Environment.NewLine, BanClean);
                 }
                 #endregion
             }
             else
             {
                 _api.statusCodeMessage = data?.message ?? api?.response.ReasonPhrase;
-                Console.WriteLine("{0} ({1})\r\n", (int)api?.response?.StatusCode, _api.statusCodeMessage);
+                Console.WriteLine("{0} ({1})" + Environment.NewLine, (int)api?.response?.StatusCode, _api.statusCodeMessage);
             }
             #endregion
 
@@ -263,51 +302,7 @@ namespace infiBanChecker.Utils
             #endregion
         }
         #endregion
-
-        #region Seconds To MilSeconds 
-        internal static int timeSeconds(int seconds)
-        {
-            return (seconds * 1000);
-        }
-        #endregion
-
-        #region Culture Code
-        internal enum CultureCode
-        {
-            English,
-            Danish,
-            German,
-            French,
-            Russian,
-            Polish
-        }
-
-        internal static string CurrentCultureCode => CurrentThread.CurrentUICulture.Name;
-
-        internal static string GetCultureCode(CultureCode cc)
-        {
-            switch (cc)
-            {
-                case CultureCode.English:
-                    return "en-EN";
-                case CultureCode.Danish:
-                    return "da-DK";
-                case CultureCode.German:
-                    return "da-DK";
-                case CultureCode.French:
-                    return "br-FR";
-                case CultureCode.Russian:
-                    return "ru-RU";
-                case CultureCode.Polish:
-                    return "pl-PL";
-                default:
-                    return "";
-            }
-        }
-   
-
-    #endregion
-
+          
         #region Check InfiStar Token 
         internal static async Task<bool> checkInfiStarToken(string tokenFromJson)
         {
@@ -315,24 +310,27 @@ namespace infiBanChecker.Utils
             isTokenOk = !isTokenOk;
            
             if (Json.getInstance().Generated || tokenFromJson == "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-            { 
-                Console.WriteLine("{0} \n{1}\r\n\r\n{2}\r\n\r\n", EditDefaultConfigMessage, ConfigCanBeFoundMessage, _config);
+            {
+                Console.Clear();
+                Console.WriteLine("{1} {0}{0}{2}{0}{3}{0}", Environment.NewLine, EditDefaultConfigMessage, ConfigCanBeFoundMessage, _config);
                 await exitConsole();
             }
             else
             {
                 // infistar license to short
-                if (tokenFromJson.Length< 30)
-                { 
-                       Console.WriteLine("{0}\r\n{1}\r\n\r\n", InfiLicenseTooShortMessage, CheckAndTryAgainMessage);
+                if (tokenFromJson.Length < 32)
+                {
+                    Console.Clear();
+                    Console.WriteLine("{1} {0}{0}{2}{0}", Environment.NewLine, InfiLicenseTooShortMessage, CheckAndTryAgainMessage);
                     await exitConsole();
                 }
                 else
-                {
-                    // infistar license invalid format
-                    if (!(bool) stringContainsInteger(tokenFromJson)[0])
+                { 
+                    // infistar license invalid format 
+                    if (!string.IsNullOrEmpty(tokenFromJson) && !Regex.IsMatch(tokenFromJson, "^[0-9a-fA-F]{32}$", RegexOptions.Compiled))
                     {
-                        Console.WriteLine("{0}\r\n{1}\r\n\r\n", InfiLicenseInvalidMessage, CheckAndTryAgainMessage);
+                        Console.Clear();
+                        Console.WriteLine("{1} {0}{0}{2}{0}", Environment.NewLine, InfiLicenseInvalidMessage, CheckAndTryAgainMessage);
                         await exitConsole();
                     }
                     else
