@@ -8,7 +8,7 @@ namespace infiBanChecker
         //      Major Version
         //      Minor Version
         //      Build Number 
-        internal const string version = "3.0.0";
+        internal const string version = "3.1.3";
         #endregion
          
         #region EntryPoint
@@ -17,7 +17,7 @@ namespace infiBanChecker
             #region Subscribe Assembly Resolver
             AppDomain.CurrentDomain.AssemblyResolve += Utils.Helpers.getInstance().AssemblyResolver;
             #endregion
-
+           
             #region Setup the console window parameters
             Utils.Helpers.setupConsole(
                 $"{Utils.Helpers._assembly.GetName().Name}",

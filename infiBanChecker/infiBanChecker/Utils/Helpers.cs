@@ -19,37 +19,35 @@ namespace infiBanChecker.Utils
         internal static API _api;
         internal static Assembly _assembly = typeof(Helpers).Assembly;   
         internal static readonly string _config = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ _assembly.GetName().Name}.json");
-        private static bool isUrlParametersValid, isGlobalBanned, isSteam64Error, isTokenOk = false;
+        private static bool isUrlParametersValid, isGlobalBanned, isTokenOk = false;
         #endregion
 
         #region Resolve Embedded Assemblies
         internal Assembly AssemblyResolver(object sender, ResolveEventArgs args)
         {
-            AssemblyName askedAssembly = new AssemblyName(args.Name);
+            var askedAssembly = new AssemblyName(args.Name);
 
             lock (this)
-            {
-                Assembly assembly = null;
-                Stream stream = _assembly.GetManifestResourceStream($"infiBanChecker.EmbeddedAssemblies.{askedAssembly.Name}.dll");
+            { 
+                var stream = _assembly.GetManifestResourceStream($"infiBanChecker.EmbeddedAssemblies.{askedAssembly.Name}.dll");
+                if (stream == null) return null;
 
-                if (stream != null)
+                Assembly assembly = null; 
+                try
                 {
                     var assemblyData = new byte[stream.Length];
-                    try
-                    {
-                        stream.Read(assemblyData, 0, assemblyData.Length);
-                        assembly = Assembly.Load(assemblyData);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Loading embedded assembly: {0}\r\nHas thrown a unhandled exception: {1}", askedAssembly.Name, e);
-                        //Console.ReadKey();
-                    }
-                    finally
-                    {
-                        if(assembly != null)
-                            Console.WriteLine("Loaded embedded assembly: {0}", askedAssembly.Name);
-                    }
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    assembly = Assembly.Load(assemblyData);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Loading embedded assembly: {0}\r\nHas thrown a unhandled exception: {1}", askedAssembly.Name, e);
+                    _ = exitConsole(10);//unsure on this i've never used discards before.
+                }
+                finally
+                {
+                    if(assembly != null)
+                        Console.WriteLine("Loaded embedded assembly: {0}", askedAssembly.Name); 
                 }
                 return assembly;
             }
@@ -60,10 +58,10 @@ namespace infiBanChecker.Utils
         private static string readSid64FromConsole
         {
             get
-            { 
+            {
                 Console.Clear();
-                Console.WriteLine("{0}\n", Localization.Language.EnterSteam64Message);
-                Console.WriteLine("{0}: ", Localization.Language.Steam64);
+                Console.WriteLine("{0}\n", EnterSteam64Message);
+                Console.WriteLine("{0}: ", Steam64);
                 return Console.ReadLine();
             }
         }
@@ -173,28 +171,30 @@ namespace infiBanChecker.Utils
             #endregion
 
             return response;
-        } 
-        
+        }
+
         #endregion
 
         #region CheckSteamID 
         internal static async Task CheckSteam64(API api)
         {
-            #region Check SteamID is valid SteamID number  
-            api.steamID = "";
-            isSteam64Error = false;
-            while (api.steamID.Length < 17 || api.steamID.Length > 17 || isSteam64Error)
+            #region Check SteamID is valid SteamID number 
+            
+            var ci = readSid64FromConsole;  
+            while (Regex.Matches(ci, @"[a-zA-Z]").Count > 0)
             {
-                var stringCheck = stringContainsInteger(readSid64FromConsole);
-                isSteam64Error = (bool)stringCheck[0];
-                api.steamID = (string)stringCheck[1];
-                if (api.steamID.Length == 17 && !isSteam64Error)
-                {
-                    Console.Clear(); 
-                    Console.WriteLine("{0}: `{1}` {2}\n", Localization.Language.ValidatingSteam64Message, api.steamID, Localization.Language.ValidatingWithAPIMessage);
-                    break;
-                }
+                ci = readSid64FromConsole;
+                if (Regex.Matches(ci, @"[a-zA-Z]").Count < 0) break; 
             }
+             
+            api.steamID = ulong.Parse(ci); 
+             
+            if (api.steamID.IsValid)
+            {
+                Console.Clear();
+                Console.WriteLine("{0}: `{1}` {2}\n", ValidatingSteam64Message, api.steamID, ValidatingWithAPIMessage);
+            } 
+
             #endregion
 
             #region Connect to api and get response   
@@ -239,7 +239,7 @@ namespace infiBanChecker.Utils
             }
             else
             {
-                _api.statusCodeMessage = (data?.message.Length < 1) ?  api?.response.ReasonPhrase : data?.message;
+                _api.statusCodeMessage = data?.message ?? api?.response.ReasonPhrase;
                 Console.WriteLine("{0} ({1})\r\n", (int)api?.response?.StatusCode, _api.statusCodeMessage);
             }
             #endregion
@@ -352,7 +352,7 @@ namespace infiBanChecker.Utils
         #region ExitConsole
         internal static async Task exitConsole(int timeout = 10)
         {
-            Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
+            Console.WriteLine(AnyKeyToExitMessage);
             Console.ReadKey();
             while (timeout > 0)
             {
@@ -361,7 +361,7 @@ namespace infiBanChecker.Utils
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine("{0} {1} {2}...", Localization.Language.ExitingInMessage, timeout, Localization.Language.Seconds);
+                    Console.WriteLine("{0} {1} {2}...", ExitingInMessage, timeout, Seconds);
                     await Task.Delay(Helpers.timeSeconds(1));
                 }
             }
