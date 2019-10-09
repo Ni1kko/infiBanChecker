@@ -58,14 +58,14 @@ namespace infiBanChecker.Utils
         #endregion
 
         #region Read Steam64 from Console
-        private static ulong readSid64FromConsole
+        private static string readSid64FromConsole
         {
             get
             {
                 Console.Clear();
                 Console.WriteLine("{0}\n", EnterSteam64Message);
                 Console.WriteLine("{0}: ", Steam64);
-                return ulong.Parse(Console.ReadLine() ?? "");
+                return Console.ReadLine();
             }
         }
         #endregion
@@ -181,16 +181,23 @@ namespace infiBanChecker.Utils
         #region CheckSteamID 
         internal static async Task CheckSteam64(API api)
         {
-            #region Check SteamID is valid SteamID number   
-
-            //Todo: Convert SteamID
-            api.steamID = readSid64FromConsole; 
+            #region Check SteamID is valid SteamID number 
             
+            var ci = readSid64FromConsole;  
+            while (Regex.Matches(ci, @"[a-zA-Z]").Count > 0)
+            {
+                ci = readSid64FromConsole;
+                if (Regex.Matches(ci, @"[a-zA-Z]").Count < 0) break; 
+            }
+             
+            api.steamID = ulong.Parse(ci); 
+             
             if (api.steamID.IsValid)
             {
                 Console.Clear();
-                Console.WriteLine("{0}: `{1}` {2}\n", Localization.Language.ValidatingSteam64Message, api.steamID, Localization.Language.ValidatingWithAPIMessage);
-            }
+                Console.WriteLine("{0}: `{1}` {2}\n", ValidatingSteam64Message, api.steamID, ValidatingWithAPIMessage);
+            } 
+
             #endregion
 
             #region Connect to api and get response   

@@ -40,6 +40,6 @@ namespace infiBanChecker.Utils
     internal class API : ApiData
     {
         public override string endpoint => $"{base.endpoint}arma/getGlobalBan";
-        public override string uri => $"{base.uri}&uid={base.steamID}";
+        public override string uri => $"{base.uri}&uid={new SteamID(base.steamID.ToString()).ConvertToUInt64()}";
     }
 }
