@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using static infiBanChecker.Localization.Language;
 using static System.Threading.Thread;
-using SteamKit2;
 
 namespace infiBanChecker.Utils
 {
@@ -26,31 +25,29 @@ namespace infiBanChecker.Utils
         #region Resolve Embedded Assemblies
         internal Assembly AssemblyResolver(object sender, ResolveEventArgs args)
         {
-            AssemblyName askedAssembly = new AssemblyName(args.Name);
+            var askedAssembly = new AssemblyName(args.Name);
 
             lock (this)
-            {
-                Assembly assembly = null;
-                Stream stream = _assembly.GetManifestResourceStream($"infiBanChecker.EmbeddedAssemblies.{askedAssembly.Name}.dll");
+            { 
+                var stream = _assembly.GetManifestResourceStream($"infiBanChecker.EmbeddedAssemblies.{askedAssembly.Name}.dll");
+                if (stream == null) return null;
 
-                if (stream != null)
+                Assembly assembly = null; 
+                try
                 {
                     var assemblyData = new byte[stream.Length];
-                    try
-                    {
-                        stream.Read(assemblyData, 0, assemblyData.Length);
-                        assembly = Assembly.Load(assemblyData);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Loading embedded assembly: {0}\r\nHas thrown a unhandled exception: {1}", askedAssembly.Name, e);
-                        //Console.ReadKey();
-                    }
-                    finally
-                    {
-                        if(assembly != null)
-                            Console.WriteLine("Loaded embedded assembly: {0}", askedAssembly.Name);
-                    }
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    assembly = Assembly.Load(assemblyData);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Loading embedded assembly: {0}\r\nHas thrown a unhandled exception: {1}", askedAssembly.Name, e);
+                    _ = exitConsole(10);//unsure on this i've never used discards before.
+                }
+                finally
+                {
+                    if(assembly != null)
+                        Console.WriteLine("Loaded embedded assembly: {0}", askedAssembly.Name); 
                 }
                 return assembly;
             }
@@ -174,8 +171,8 @@ namespace infiBanChecker.Utils
             #endregion
 
             return response;
-        } 
-        
+        }
+
         #endregion
 
         #region CheckSteamID 
@@ -355,7 +352,7 @@ namespace infiBanChecker.Utils
         #region ExitConsole
         internal static async Task exitConsole(int timeout = 10)
         {
-            Console.WriteLine(Localization.Language.AnyKeyToExitMessage);
+            Console.WriteLine(AnyKeyToExitMessage);
             Console.ReadKey();
             while (timeout > 0)
             {
@@ -364,7 +361,7 @@ namespace infiBanChecker.Utils
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine("{0} {1} {2}...", Localization.Language.ExitingInMessage, timeout, Localization.Language.Seconds);
+                    Console.WriteLine("{0} {1} {2}...", ExitingInMessage, timeout, Seconds);
                     await Task.Delay(Helpers.timeSeconds(1));
                 }
             }
