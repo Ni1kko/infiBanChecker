@@ -33,8 +33,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## License
 
-This project is licensed under the 'Do What The F*ck You Want To ' License - see the [LICENSE.md](https://github.com/Ni1kko/infiBanChecker/blob/master/LICENSE) file for details
+This project is licensed under the 'Do What The F*ck You Want To ' License - see the [LICENSE](https://github.com/Ni1kko/infiBanChecker/blob/master/LICENSE) file for details
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/Ni1kko/infiBanChecker/blob/master/CONTRIBUTING) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING](https://github.com/Ni1kko/infiBanChecker/blob/master/CONTRIBUTING) for details on our code of conduct, and the process for submitting pull requests to us.
