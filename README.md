@@ -33,7 +33,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## License
 
-This project is licensed under the 'Do What The F*ck You Want To ' License - see the [LICENSE](https://github.com/Ni1kko/infiBanChecker/blob/master/LICENSE) file for details
+This project is licensed under the WTFPL - see the [LICENSE](https://github.com/Ni1kko/infiBanChecker/blob/master/LICENSE) file for details
 
 ## Contributing
 
