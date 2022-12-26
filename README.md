@@ -37,4 +37,4 @@ This project is licensed under the WTFPL - see the [LICENSE](https://github.com/
 
 ## Contributing
 
-Please read [CONTRIBUTING](https://github.com/Ni1kko/infiBanChecker/blob/master/CONTRIBUTING) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING](https://github.com/Ni1kko/infiBanChecker/blob/master/CONTRIBUTING) for details on our code of conduct, and the process for submitting pull requests to us. 
